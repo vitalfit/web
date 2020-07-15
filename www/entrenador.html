@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Vitalfit</title>
+	<meta name="viewport" content="minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="format-detection" content="telephone=no" />
+
+	<link rel="stylesheet" href="mobileui/mui.min.css" type="text/css">
+	<link rel="stylesheet" href="custom/custom.css" type="text/css">
+	<link rel="stylesheet" href="node_modules/keen-ui/dist/keen-ui.min.css">
+
+	<script src="phonegap.js"></script>
+	<script src="vendors/fastclick.min.js" type="text/javascript"></script>
+
+	<script src="vendors/jquery.min.js" type="text/javascript"></script>
+	<script src="vendors/jquery.animate-enhanced.js" type="text/javascript"></script>
+	<script src="vendors/jqwait/jquery.wait.min.js" type="text/javascript"></script>
+	<script src="vendors/iscroll-min.js" type="text/javascript"></script>
+
+	<script src="mobileui/mui.min.js" type="text/javascript"></script>
+	<script src="custom/custom.js" type="text/javascript"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<!-- <script src="node_modules/keen-ui/dist/keen-ui.min.js"></script> -->
+
+
+	<script>
+		$(document).ready(() => {
+
+			//******** INTERACCIONES CON LA BASE DE DATOS **********//
+
+			$.ajax({
+				type: 'GET',
+				url: 'https://app-personal-trainer.herokuapp.com/clientes/',
+				xhrFields: { withCredentials: true },
+				crossDomain: true,
+				success: function (data) {
+					homePage.alumnos = data
+				}
+			})
+
+
+			//******** OBJETOS VUE **********//
+
+			const homePage = new Vue({
+				el: "#home-page",
+				data: {
+					alumnos: [],
+					alumnoSeleccionado: ""
+				},
+				methods: {
+					nuevoAlumno: function() {
+						mui.viewport.showPage("nuevoAlumno-page", 'SLIDE_LEFT')
+					},
+					verAlumno: function () {
+						verAlumno.alumno.nombre = this.alumnoSeleccionado.nombre.split(" ")[0]
+						verAlumno.alumno.apellido = this.alumnoSeleccionado.nombre.split(" ")[1]
+						verAlumno.alumno.username = this.alumnoSeleccionado.username
+						if(this.alumnoSeleccionado.fecha_nacimiento != undefined){
+							verAlumno.alumno.fecha_nacimiento = this.alumnoSeleccionado.fecha_nacimiento.split("T")[0]
+						}
+						verAlumno.alumno.nro_contacto = this.alumnoSeleccionado.nro_contacto
+						verAlumno.alumno.mail = this.alumnoSeleccionado.mail
+						mui.viewport.showPage("visualizarAlumno-page", 'SLIDE_LEFT')
+					},
+					verPlanes: async function () {
+						verPlanes.alumno = this.alumnoSeleccionado
+						await verPlanes.cargarPlanes()
+						mui.viewport.showPage("visualizarPlanes-page", 'SLIDE_LEFT')
+
+					},
+					abrirPlanNuevo: function (alumno) {
+						planNuevo.alumno = alumno
+						mui.viewport.showPage("planNuevo-page", 'SLIDE_LEFT')
+					},
+					abrirNuevaSesion: function () {
+						nuevaSesion.alumno = this.alumnoSeleccionado
+						nuevaSesion.cargarDatos()
+						mui.viewport.showPage("nuevaSesion-page", 'SLIDE_LEFT')
+					},
+					asignacionPlan: function () {
+						asignarPlan.alumno = this.alumnoSeleccionado
+						asignarPlan.cargarPlanes()
+						mui.viewport.showPage("asignarPlan-page", 'SLIDE_LEFT')
+					},
+					eliminarAlumno: function () {
+						username = this.alumnoSeleccionado.username
+						$.ajax({
+							type: 'DELETE',
+							url: 'https://app-personal-trainer.herokuapp.com/clientes/' + username,
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							success: function (data) {
+								alert("Eliminado")
+							}
+						})
+					},
+
+					logout: function () {
+						$.ajax({
+							type: 'GET',
+							url: 'https://app-personal-trainer.herokuapp.com/logout',
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							success: function (data) {
+								document.location.href = "index.html"
+							}
+						})
+					},
+					seleccionarAlumno(alumno) {
+						this.alumnoSeleccionado = alumno
+					}
+				}
+			})
+
+			const nuevaSesion = new Vue({
+				el: "#nuevaSesion-page",
+				data: {
+					planes: [],
+					plan_actual: '',
+					alumno: ""
+				},
+				methods: {
+					async cargarDatos() {
+						URL = 'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/planes'
+						await $.ajax({
+							type: 'GET',
+							url: URL,
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							dataType: 'json',
+							success: (responseData) => {
+								this.planes = responseData
+							}
+
+						})
+
+						URL =  'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/plan_asignado'
+						await $.ajax({
+							type: 'GET',
+							url: URL,
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							dataType: 'json',
+							success: (responseData)=>{
+								this.plan_actual = responseData
+							},
+							error: (responseData)=>{
+								this.plan_actual = "No hay plan actual";
+							}
+
+						})
+
+						
+					},
+
+					abrirDiaSesionNueva: function (value1, value2) {
+						ejerciciosSesion.ejercicios = this.planes[value1].dias[value2].ejercicios
+						ejerciciosSesion.planSerial = value1
+						ejerciciosSesion.diaSerial = value2
+						ejerciciosSesion.alumno = this.alumno
+						mui.viewport.showPage("nuevaSesionEjercicios-page", "SLIDE_LEFT")
+					},
+					volverHome: function() {
+						mui.viewport.showPage("home-page", "SLIDE_RIGHT")
+					}
+				}
+			})
+
+			const alumnoNuevo = new Vue({
+				el: "#nuevoAlumno-page",
+				data: {
+					alumno: {
+						nombre: "",
+						apellido: "",
+						fechaDeNac: "",
+						nroContacto: "",
+						email: ""
+					}
+				},
+				methods: {
+					confirmarAlumno: function () {
+						if(this.alumno.nombre != "" && this.alumno.apellido != "" && this.alumno.fechaDeNac != "" && this.alumno.nroContacto != "" && this.alumno.email != "") {
+							$.ajax({
+								type: 'POST',
+								url: 'https://app-personal-trainer.herokuapp.com/clientes/',
+								xhrFields: { withCredentials: true },
+								crossDomain: true,
+								data: {
+									'nombre': this.alumno.nombre + " " + this.alumno.apellido,
+									'username': this.alumno.nombre.toLowerCase() + "." + this.alumno.apellido.split(" ")[0].toLowerCase(),
+									'admin': false,
+									'password': this.alumno.apellido,
+									'fecha_nacimiento': this.alumno.fecha_nacimiento,
+									'nro_contacto': this.alumno.nro_contacto,
+									'mail': this.alumno.mail
+								},
+								dataType: 'json',
+								success: (responseData) => {
+									alert(responseData)
+								}
+
+							})
+							homePage.alumnos.push(this.alumno)
+							this.alumno.nombre = ""
+							this.alumno.apellido = ""
+							this.alumno.fechaDeNac = ""
+							this.alumno.nroContacto = ""
+							this.alumno.email = ""
+							mui.viewport.showPage("home-page", "SLIDE_RIGHT")
+						}
+					}
+				}
+			})
+
+			const verAlumno = new Vue({
+				el: "#visualizarAlumno-page",
+				data: {
+					alumno: {
+						nombre: "",
+						apellido: "",
+						fecha_nacimiento: "",
+						nro_contacto: "",
+						mail: "",
+						username: ""
+					}
+				},
+				methods: {
+					eliminarAlumno: function() {
+						username = this.alumno.username
+						$.ajax({
+							type: 'POST',
+							url: 'https://app-personal-trainer.herokuapp.com/clientes/' + username + "/borrar",
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							success: function(data){
+								alert("Eliminado")
+							}
+						})
+						return false
+					}
+				}
+			})
+
+			const planNuevo = new Vue({
+				el: "#planNuevo-page",
+				data: {
+					alumno: "",
+					nombrePlan: '',
+					dias: [],
+					nombreDia: "",
+				},
+				methods: {
+					agregarDia: function () {
+						diaAux = {
+							nombre: this.nombreDia,
+							ejercicios: []
+						}
+						if (this.nombreDia != "") {
+							this.dias.push(diaAux)
+						}
+						
+					},
+					quitarDia: function () {
+						this.dias.pop()
+					},
+					diaNuevo: function (value) {
+						diaNuevo.ejercicios = this.dias[value].ejercicios
+						diaNuevo.indiceDia = value
+						diaNuevo.nombreDia = this.dias[value].nombre
+						mui.viewport.showPage("diaNuevo-page", "SLIDE_LEFT")
+					},
+					confirmarPlan: function () {
+						if (this.nombrePlan != "" && this.dias.length > 0) {
+							var planAux = {
+								nombre: this.nombrePlan,
+								dias: this.dias
+							}
+							console.log(planAux)
+							$.ajax({
+								type: 'POST',
+								url: 'https://app-personal-trainer.herokuapp.com/clientes/' + this.alumno.username + '/planes',
+								xhrFields: { withCredentials: true },
+								crossDomain: true,
+								data: {
+									'nombre': this.nombrePlan,
+								},
+								dataType: 'json',
+								success: (responseData) => {
+									for (let i = 0; i < this.dias.length; i++) {
+										$.ajax({
+											type: 'POST',
+											url: 'https://app-personal-trainer.herokuapp.com/clientes/' + this.alumno.username + '/planes/' + responseData._id + '/dias',
+											xhrFields: { withCredentials: true },
+											crossDomain: true,
+											data: {
+												'nombre': this.dias[i].nombre,
+												'ejercicios': this.dias[i].ejercicios
+											},
+											dataType: 'json',
+											success: (responseData2) => {
+												for (let j = 0; j < this.dias[i].ejercicios.length; j++) {
+													$.ajax({
+														type: 'POST',
+														url: 'https://app-personal-trainer.herokuapp.com/clientes/' + this.alumno.username + '/planes/' + responseData._id + '/dias/' + responseData2._id + '/ejercicios',
+														xhrFields: { withCredentials: true },
+														crossDomain: true,
+														data: {
+															'nombre': this.dias[i].ejercicios[j].nombre,
+															'intensidad': this.dias[i].ejercicios[j].intensidad,
+															'repeticiones': this.dias[i].ejercicios[j].repeticiones,
+															'series': this.dias[i].ejercicios[j].series,
+															'tiempo': this.dias[i].ejercicios[j].tiempo
+														},
+														dataType: 'json',
+														success: (r) => {
+															console.log(r)
+														}
+													})
+												}
+											}
+										})
+									}
+								}
+							})
+							mui.viewport.showPage("home-page", "SLIDE_RIGHT")
+						}
+					}
+				}
+			})
+
+
+			const diaNuevo = new Vue({
+				el: '#diaNuevo-page',
+				data: {
+					indiceDia: 0,
+					nombreDia: "",
+					ejercicios: []
+				},
+				methods: {
+					agregarEjercicio: function () {
+						var ejercicio = {
+							nombre: "",
+							series: "",
+							repeticiones: "",
+							intensidad: "",
+							tiempo: ""
+						}
+						this.ejercicios.push(ejercicio)
+					},
+					quitarEjercicio: function () {
+						this.ejercicios.pop()
+					},
+					confirmarEjercicio: function () {
+						planNuevo.dias[this.indiceDia].ejercicios = this.ejercicios
+						this.ejercicios = []
+						mui.viewport.showPage("planNuevo-page", "SLIDE_RIGHT")
+					}
+				}
+			})
+			
+
+			const ejerciciosSesion = new Vue({
+				el: '#nuevaSesionEjercicios-page',
+				data: {
+					alumno: "",
+					planSerial: 0,
+					diaSerial: 0,
+					ejercicios: []
+				},
+				methods: {
+					confirmarSesionEjercicios: function() {
+						for (i in this.ejercicios) {
+							var sesionAux = {
+								nombre: "",
+								series: "",
+								repeticiones: "",
+								intensidad: "",
+								tiempo: ""
+							}
+							var ejercicioAux = this.ejercicios[i]
+
+							sesionAux.nombre = ejercicioAux.nombre,
+							sesionAux.series = ejercicioAux.series,
+							sesionAux.repeticiones = ejercicioAux.repeticiones,
+							sesionAux.intensidad = ejercicioAux.intensidad,
+							sesionAux.tiempo = ejercicioAux.tiempo
+							
+							var planId = nuevaSesion.planes[this.planSerial]._id
+							var diaId = nuevaSesion.planes[this.planSerial].dias[this.diaSerial]._id
+							var ejercicioId = this.ejercicios[i]._id
+
+							URL = 'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username +"/planes/" + planId + "/dias/" + diaId + "/ejercicios/" + ejercicioId + "/sesiones"
+
+							$.ajax({
+								type: 'POST',
+								url: URL,
+								xhrFields: { withCredentials: true },
+								crossDomain: true,
+								data: {
+									"nombre": sesionAux.nombre,
+									"series": sesionAux.series,
+									"intensidad": sesionAux.intensidad,
+									"tiempo": sesionAux.tiempo,
+									"repeticiones": sesionAux.repeticiones
+								},
+								dataType: 'json',
+								success: (responseData)=>{
+									
+								}
+							})
+
+						}
+						this.ejercicios = []
+						mui.viewport.showPage("nuevaSesion-page", "SLIDE_RIGHT")
+					}
+				}
+			})
+
+			const verPlanes = new Vue({
+				el: '#visualizarPlanes-page',
+				data: {
+					alumno: '',
+					planes: []
+				},
+				methods: {
+					abrirEjerciciosVisualizar: function (dia) {
+						verEjercicios.ejercicios = dia.ejercicios
+						verEjercicios.diaNombre = dia.nombre
+						mui.viewport.showPage("visualizarEjercicios-page", "SLIDE_LEFT")
+					},
+					async cargarPlanes() {
+						URL = 'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/planes'
+						await $.ajax({
+							type: 'GET',
+							url: URL,
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							dataType: 'json',
+							success: (responseData) => {
+								this.planes = responseData
+							}
+
+						})
+					}
+				}
+			})
+
+			const verEjercicios = new Vue({
+				el: '#visualizarEjercicios-page',
+				data: {
+					diaNombre:"",
+					ejercicios: []
+				},
+				methods: {
+					verSesiones: function(value) {
+						verSesiones.sesiones = this.ejercicios[value].sesiones
+						verSesiones.nombreEjercicio = this.ejercicios[value].nombre
+						mui.viewport.showPage("visualizarSesiones-page", "SLIDE_LEFT")
+					}
+				}
+			})
+
+			const verSesiones = new Vue({
+				el: '#visualizarSesiones-page',
+				data: {
+					nombreEjercicio: "",
+					sesiones: []
+				},
+				methods: {}
+			})
+
+			const asignarPlan = new Vue({
+				el: '#asignarPlan-page',
+				data: {
+					alumno: '',
+					planes: [],
+					id_planSeleccionado: '',
+					plan_actual: ''
+				},
+				methods: {
+					async cargarPlanes(){
+						URL =  'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/planes'
+						await $.ajax({
+							type: 'GET',
+							url: URL,
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							dataType: 'json',
+							success: (responseData)=>{
+								this.planes = responseData
+							}
+
+						})
+						
+						URL =  'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/plan_asignado'
+						await $.ajax({
+							type: 'GET',
+							url: URL,
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							dataType: 'json',
+							success: (responseData)=>{
+								this.plan_actual = responseData
+							},
+							error: (responseData)=>{
+								this.plan_actual = "No hay plan actual";
+							}
+
+						})
+
+					},
+
+					asignarPlanSeleccionado: function(){
+
+						URL = 'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username +"/plan_asignado"
+
+						$.ajax({
+							type: 'POST',
+							url: URL,
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							data: {
+								plan_asignado: this.id_planSeleccionado
+							},
+							dataType: 'json',
+							success: (responseData)=>{
+								
+							}
+						})
+						
+					}
+				}
+			})
+
+			
+			const menuPanel = new Vue({
+				el: "#menu-panel",
+				methods:{
+					logout: function(){
+						$.ajax({
+							type: 'GET',
+							url: 'https://app-personal-trainer.herokuapp.com/logout',
+							xhrFields: { withCredentials: true },
+							crossDomain: true,
+							success: function(data){
+								document.location.href = "index.html"
+							}
+						})
+					},
+					irachangepassword: function(){
+						mui.viewport.showPage("changepassword-page", "SLIDE_LEFT");
+					}
+				}
+			})
+		})
+	</script>
+</head>
+
+<body>
+	<!-- Main wrapper. Importantly, think carefully before you change it or remove it. Do not recommend it. -->
+	<!-- Main wrapper. Importante, Piénselo bien antes de cambiarlo o quitarlo. No se lo recomiendo. -->
+	<div id="mui-screen" class="mui-viewport">
+		<div id="mui-screen-page" class="mui-page">
+			<!-- Ddefault viewport. Do not remove. It will make your life simpler and happy. -->
+			<!-- ViewPort por defecto. No lo elimines. Hará tu vida más simple y feliz. -->
+			<div id="mui-viewport" class="mui-viewport">
+
+
+<!-- PAGINA INICIO -->
+
+
+				<div id="home-page" class="mui-page">
+					<div class="mui-page-header">
+						<div class="mui-page-logo"></div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="home-body" style="overflow:scroll">
+						<div>
+							<div class="col-80">
+								<p class="titulo">ALUMNOS</p>
+							</div>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+							<div class="col-80">
+								<br>
+								<span>
+									<input type="text" class="filtro_alumnos_input"
+										onkeyup="filtro('.filtro_alumnos_input', '.lista_alumnos')"
+										placeholder="Buscar por nombre">
+									<button class="agregar_alumno_boton" @click="nuevoAlumno">＋</button>
+								</span>
+								<ul class="lista_alumnos">
+									<li v-for="(alumno, index) in alumnos">
+										<a @click="seleccionarAlumno(alumno)"
+											onclick="desplegarOpcionesOnclick(this)">{{ alumno.nombre }}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+<!-- CARGA DE DATOS NUEVO ALUMNO -->
+
+
+				<div id='nuevoAlumno-page' class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>NUEVO ALUMNO</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<div class="col-80" id="nuevoAlumnoID">
+							<br>
+							<p>Nombre:</p><input type="text" placeholder="Nombre" v-model="alumno.nombre"><br>
+							<p>Apellido:</p><input type="text" placeholder="Apellido" v-model="alumno.apellido"><br>
+							<p>Fecha de Nacimiento:</p><input type="date" placeholder="Fecha de Nacimiento"
+								v-model="alumno.fechaDeNac"><br>
+							<p>Nro. de Contacto:</p><input type="tel" placeholder="Nro. de Contacto"
+								v-model="alumno.nroContacto"><br>
+							<p>Email:</p><input type="email" placeholder="Email" v-model="alumno.email"><br><br>
+							<button class="confirmar_boton" @click="confirmarAlumno">Confirmar</button>
+						</div>
+					</div>
+				</div>
+
+
+<!-- VISUALIZAR ALUMNO -->
+
+
+				<div id='visualizarAlumno-page' class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>DATOS ALUMNO</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<p class="titulo">{{alumno.nombre}} {{alumno.apellido}}</p>
+						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+						<div class="col-80" id="vistaAlumno">
+							<p class="propiedad">Fecha de Nacimiento:</p>
+							<p v-text="alumno.fecha_nacimiento"></p>
+							<p class="propiedad">Nro. de Contacto:</p>
+							<p v-text="alumno.nro_contacto"></p>
+							<p class="propiedad">Email:</p>
+							<p v-text="alumno.mail"></p><br>
+						</div>
+						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+						<button class="confirmar_boton" @click="eliminarAlumno"> Eliminar usuario </button>
+					</div>
+				</div>
+
+
+<!-- PLAN NUEVO -->
+
+
+				<div id='planNuevo-page' class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>PLAN NUEVO</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<div id="planNuevo-app">
+							<div class="col-80">
+								<p class="titulo">PLAN NUEVO</p>
+							</div>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+							<div class="col-80">
+								<div>
+									<p class="plan_nuevo_label">Nombre del Plan: </p>
+									<input v-model="nombrePlan" type="text" placeholder="Ingrese Nuevo Nombre"
+										class="nombre_plan_input">
+									<p class="plan_nuevo_label">Días: </p>
+									<span>
+										<input type="text" class="nombre_dia_input" v-model="nombreDia"
+											placeholder="Ingrese Nombre Dia">
+										<button id="nuevoDia" class="agregar_boton" v-on:click="agregarDia">＋</button>
+										<button id="quitarDia" class="quitar_boton" v-on:click="quitarDia">&minus;</button>
+									</span>
+								</div>
+							</div>
+							<div class= "col-80">
+								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+								<ul class="lista_dias">
+									<li v-for="(dia, index) in dias">
+										<a v-on:click="diaNuevo(index)" v-text="dia.nombre"></a>
+									</li>
+								</ul>
+								<br>
+								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">							
+								<br>								
+							</div>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">	
+							<br>
+							<button class="confirmar_boton" @click="confirmarPlan">Confirmar</button>
+						</div>
+					</div>
+				</div>
+
+
+<!-- PLAN NUEVO - DIA NUEVO -->
+
+
+				<div id='diaNuevo-page' class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>DÍA NUEVO</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<div id="diaNuevo-app">
+							<div class="col-80">
+								<p class="titulo">{{nombreDia}}</p>
+							</div>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+							<div class= "col-80">
+								<button id="nuevoEjercicio" class="agregar_ejercicio_boton" v-on:click="agregarEjercicio">Agregar Ejercicio</button>
+								<button id="quitarEjercicio" class="quitar_boton" v-on:click="quitarEjercicio">&minus;</button>
+							</div>
+							<ul class="lista_ejercicios">
+								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+								<li v-for="(ejercicioA,index) in ejercicios">
+									<div class="col-80">
+										<span>
+											<p>Ejercicio - {{ index + 1}}</p>
+										</span>
+										<p>Nombre:</p><input type="Text" v-model="ejercicioA.nombre">
+										<br>
+										<p>Series:</p><input type="Number" v-model="ejercicioA.series">
+										<br>
+										<p>repeticiones:</p><input type="Number" v-model="ejercicioA.repeticiones">
+										<br>
+										<p>Intensidad:</p><input type="Number" v-model="ejercicioA.intensidad">
+										<br>
+										<p>Tiempo:</p><input type="Number" v-model="ejercicioA.tiempo">
+										<br>
+									</div>
+									<br>
+									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+								</li>
+							</ul>
+							<br>
+							<button class="confirmar_boton" @click="confirmarEjercicio">Confirmar</button>
+						</div>
+					</div>
+				</div>
+
+
+<!-- SESION NUEVA -->
+
+
+				<div id="nuevaSesion-page" class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>NUEVA SESIÓN - PLANES</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<div id="nuevaSesion-app">
+							<p class="titulo">PLANES</p>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+							<br>
+							<div class="col-80">
+								<input type="text" class="filtro_planes_input" onkeyup="filtro('.filtro_planes_input', '.lista_planes')" placeholder="Buscar plan">
+								<ul class="lista_planes">
+									<li v-for='(plan, index1) in planes'>
+										<a onclick="desplegarDiasOnclick(this)">{{plan.nombre}}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+<!-- SESION NUEVA - EJERCICIOS -->
+
+
+				<div id='nuevaSesionEjercicios-page' class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>NUEVA SESIÓN - EJERCICIOS</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<div id="nuevaSesionEjercicios-app">
+							<p class="titulo">INGRESAR SESIÓN</p>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+							<div class= "col-80">
+							</div>
+							<ul class="lista_sesion_ejercicios">
+								<li v-for="ejercicio in ejercicios">
+									<div class= "col-80">
+										<span><p>{{ejercicio.nombre}}</p></span>
+										<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+										<p class="lista_ejercicio_elemento">Series:</p><input type="Number" placeholder="Número de Series" v-model="ejercicio.series">
+										<br>
+										<p class="lista_ejercicio_elemento">repeticiones:</p><input type="Number" placeholder="Número de Repeticiones" v-model="ejercicio.repeticiones">
+										<br>
+										<p class="lista_ejercicio_elemento">Intensidad:</p><input type="Number" placeholder="Intensidad Alcanzada" v-model="ejercicio.intensidad">
+										<br>
+										<p class="lista_ejercicio_elemento">Tiempo:</p><input type="Number" placeholder="Tiempo de Ejecución" v-model="ejercicio.tiempo">										
+										<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+										<br>
+									</div>
+									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+								</li>
+							</ul>
+							<br>
+							<button class="confirmar_boton" @click="confirmarSesionEjercicios">Confirmar</button>
+						</div>
+					</div>
+				</div>
+
+
+<!-- VISUALIZAR PLANES -->
+
+
+				<div id="visualizarPlanes-page" class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>PLANES</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<div>
+							<div id="visualizarPlanes-app">
+							<p class="titulo">PLANES</p>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+							<br>
+								<div class="col-80">
+									<input type="text" class="filtro_planes_input" onkeyup="filtro('.filtro_planes_input', '.lista_planes')" placeholder="Buscar plan">
+									<br>
+									<ul class="lista_planes_visualizar"><br>
+										<li v-for='plan in planes'>
+											<a onclick="desplegarDiasVisualizarOnclick(this)">{{plan.nombre}}</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+<!-- VISUALIZAR PLANES - VISUALIZAR EJERCICIOS -->
+
+
+				<div id='visualizarEjercicios-page' class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>EJERCICIOS</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<p class="titulo">{{diaNombre}}</p>
+						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+						<ul class="lista_sesion_ejercicios">
+							<li v-for="(ejercicio, index) in ejercicios">
+								<div class="col-80">
+									<p class="nombre_ejercicio">{{ejercicio.nombre}}</p>
+									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<p class="lista_ejercicio_elemento">Series: {{ejercicio.series}}</p>
+									<br>
+									<p class="lista_ejercicio_elemento">repeticiones: {{ejercicio.repeticiones}}</p>
+									<br>
+									<p class="lista_ejercicio_elemento">Intensidad: {{ejercicio.intensidad}}</p>
+									<br>
+									<p class="lista_ejercicio_elemento">Tiempo: {{ejercicio.tiempo}}</p>
+									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<button class="ver_sesiones_boton" @click="verSesiones(index)">Ver Sesiones</button>
+								</div>
+								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+								<br>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+
+<!-- VISUALIZAR PLANES - VISUALIZAR EJERCICIOS - VISUALIZAR SESIONES -->
+
+
+				<div id='visualizarSesiones-page' class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>SESIONES</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<p class="titulo">{{nombreEjercicio}}</p>
+						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+						<ul class="lista_sesion_ejercicios">
+							<li v-for="(sesion, i) in sesiones">
+								<div class="col-80">
+									<p class="nombre_ejercicio">Sesión - {{i + 1}}</p>
+									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<p class="lista_ejercicio_elemento">Series: {{sesion.series}}</p>
+									<br>
+									<p class="lista_ejercicio_elemento">repeticiones: {{sesion.repeticiones}}</p>
+									<br>
+									<p class="lista_ejercicio_elemento">Intensidad: {{sesion.intensidad}}</p>
+									<br>
+									<p class="lista_ejercicio_elemento">Tiempo: {{sesion.tiempo}}</p>
+									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<br>
+								</div>
+								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+								<br>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+
+<!-- ASIGNAR PLAN -->
+
+
+				<div id="asignarPlan-page" class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow" href="#"></a>
+						<div class='mui-page-title'>ASIGNAR PLAN</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body" id="second-body" style="overflow:scroll">
+						<div>
+							<div class="col-80">
+								<p class="seleccionar_plan_label">Seleccionar Plan:</p>
+								<select class="col-80 planes_selector" v-model="id_planSeleccionado">
+									<option disabled value="">Seleccione un plan</option>
+									<option v-for="plan in planes" v-bind:value="plan._id">{{plan.nombre}}</option>
+								</select>
+								<button class="confirmar_selector_boton" @click="asignarPlanSeleccionado">Agregar/cambiar plan asignado</button>
+							</div>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+							<div class="col-80">
+								<div class="plan_asignado_contenedor"><span class="plan_asignado_label">Plan asignado:</span> {{plan_actual.nombre}}</div>
+							</div>
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+						</div>
+					</div>
+				</div>
+
+
+<!-- Copy the code of "template-page" to add more pages -->
+<!-- Copie el código de template-plage para agregar más páginas -->
+
+<!-- Optional.Toolbar out of mui-viewport to be omnipresent. Remove if not needed. -->
+<!-- Opcional. Barra de herramientas fuera de mui-viewport para ser omnipresente. Elimínalo si no lo necesitas. -->
+
+
+				<div class="mui-tabbar" id="footer">
+					<ul class="mui-tabbar-list">
+						<li class="mui-tabbar-button"><a href="#" id="tabbar-button1"></a></li>
+						<li class="mui-tabbar-button"><a href="#" id="tabbar-button2"></a></li>
+						<li class="mui-tabbar-button"><a href='#' id="tabbar-button3"></a></li>
+					</ul>
+				</div>
+			</div>
+
+<!-- mui-screen level panel -->
+<!-- Panel a nivel de mui-screen -->
+
+		</div>
+		<div id="menu-panel" class="mui-panel">
+			<div class="mui-panel-header">
+				<div class='mui-panel-title'>Menu</div>
+			</div>
+			<div class="mui-panel-body">
+				<div>
+					<ul id='menuoptions' class='mui-list'>
+						<li><a @click="logout">Cerrar Sesión</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
