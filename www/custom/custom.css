@@ -386,6 +386,7 @@ button.plan_cliente_dia_boton {
 }
 .inicio_sesion_boton{
 	margin: 0 15% 0 15%;
+	width: 70%;
 }
 .planes_alumno_boton{
 	width: 80%;
