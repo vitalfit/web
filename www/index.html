@@ -86,6 +86,7 @@
 				inicio_sesion: function () {
 					uname = $('#uname').val()
 					pword = $('#pword').val()
+					mui.busy(true)
 					$.ajax({
 						type: 'POST',
 						// beforeSend: function (request) {
@@ -97,6 +98,7 @@
 						dataType: 'json',
 						xhrFields: { withCredentials: true },
 						success: function (responseData, textStatus, jqXHR) {
+							
 							var value = responseData;
 							//console.log(value)
 							//console.log(typeof (value.login))
@@ -113,24 +115,29 @@
 									crossDomain: true,
 									url: URL + '/myinfo',
 									success: function (responseData) {
+										mui.busy(false)
 										var esAdmin = responseData.admin
 										if (esAdmin) {
 											document.location.href = "entrenador.html"
 										} else if (!esAdmin) {
 											document.location.href = "cliente.html"
 										}
+									},
+									error: ()=>{
+										mui.busy(false)
 									}
 								})
 								
 
 							} else if (value.login == false) {
-
+								mui.busy(false)
 								console.log("contra incorrecta")
 								$("#alerta").text("Usuario o Contraseña incorrecta.")
 								$('#pword').val("")
 							}
 						},
 						error: function (responseData, textStatus, errorThrown) {
+							mui.busy(false)
 							console.log(responseData)
 							console.log(errorThrown)
 							alert('POST failed.');
