@@ -3,6 +3,14 @@ var path = require('path');
 var serveStatic = require('serve-static');
 var mongoose = require('mongoose');
 var session = require("express-session");
+var Vue = require('vue');
+var Vuetify = require('vuetify');
+
+Vue.use(Vuetify);
+
+new Vue({
+	vuetify : new Vuetify()
+	});
 
 var app = express();
 var port = process.env.PORT || 3001;
