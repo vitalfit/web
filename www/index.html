@@ -71,7 +71,7 @@
 	</div>
 
 	<script>
-
+		URL = 'http://vitalfit-app.herokuapp.com'
 		const inicio_sesion_app = new Vue({
 			el: '#inicio-sesion-app',
 			methods: {
@@ -83,7 +83,7 @@
 						// beforeSend: function (request) {
 						// 	request.setRequestHeader("Access-Control-Allow-Origin", '*');
 						// },
-						url: 'https://app-personal-trainer.herokuapp.com/login',
+						url: URL + '/login',
 						crossDomain: true,
 						data: { 'username': uname, 'password': pword },
 						dataType: 'json',
@@ -103,7 +103,7 @@
 									type: 'GET',
 									xhrFields: { withCredentials: true },
 									crossDomain: true,
-									url: 'https://app-personal-trainer.herokuapp.com/myinfo',
+									url: URL + '/myinfo',
 									success: function (responseData) {
 										var esAdmin = responseData.admin
 										if (esAdmin) {

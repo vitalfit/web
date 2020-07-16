@@ -32,11 +32,12 @@
 
     
 	<script>
+		URL = 'http://vitalfit-app.herokuapp.com'
 		$(document).ready(() => {
 
             $.ajax({
 				type: 'GET',
-				url: 'https://app-personal-trainer.herokuapp.com/myinfo',
+				url: URL + '/myinfo',
 				xhrFields: { withCredentials: true },
 				crossDomain: true,
 				success: function(data){
@@ -62,7 +63,7 @@
 					verPlanes: function(){
 						$.ajax({
 							type: 'GET',
-							url: 'https://app-personal-trainer.herokuapp.com/myinfo/planes',
+							url: URL + '/myinfo/planes',
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function(data){
@@ -74,7 +75,7 @@
 					verPlanActual: function(){
 						$.ajax({
 							type: 'GET',
-							url: 'https://app-personal-trainer.herokuapp.com/myinfo/plan_asignado',
+							url: URL + '/myinfo/plan_asignado',
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function(data){
@@ -86,7 +87,7 @@
 					logout: function(){
 						$.ajax({
 							type: 'GET',
-							url: 'https://app-personal-trainer.herokuapp.com/logout',
+							url: URL + '/logout',
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function(data){
@@ -118,7 +119,7 @@
 					logout: function(){
 						$.ajax({
 							type: 'GET',
-							url: 'https://app-personal-trainer.herokuapp.com/logout',
+							url: URL + '/logout',
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function(data){
@@ -297,7 +298,7 @@
 						if(this.sesion.nombre != "" && this.sesion.series != "" && this.sesion.repeticiones != "" && this.sesion.intensidad != "" && this.sesion.tiempo != ""){
 							idEjercicio = this.ejercicio._id;
 							POSTData = this.sesion;
-							urlSesiones = 'https://app-personal-trainer.herokuapp.com/myinfo/plan_asignado/dias/'+this.idDia+'/ejercicios/'+idEjercicio+'/sesiones'
+							urlSesiones = URL + '/myinfo/plan_asignado/dias/'+this.idDia+'/ejercicios/'+idEjercicio+'/sesiones'
 							$.ajax({
 								type: 'POST',
 								dataType: "json",
