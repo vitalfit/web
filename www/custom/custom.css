@@ -324,11 +324,6 @@ button{
 	margin-bottom: 5px;
 	width: 65%;
 }
-.iniciar-sesion-ventana button{
-	border: none;
-	background-color: 	grey;
-	color: white;
-}
 .col-80 .agregar_alumno_boton{
 	width : 10%;
 	padding: 2px;
@@ -390,9 +385,8 @@ button.plan_cliente_dia_boton {
 	font-weight: bold;
 }
 .inicio_sesion_boton{
-	border-radius: 5%;
-	width: 70%;
 	margin: 0 15% 0 15%;
+	width: 70%;
 }
 .planes_alumno_boton{
 	width: 80%;
@@ -446,9 +440,9 @@ button.plan_cliente_dia_boton {
 /*---------------------------------------------OTROS---------------------------------------*/
 
 .iniciar-sesion-ventana{
-	padding: 10%;
-	border: solid 1px rgba(189, 195, 199, 0.6);
-	background-color: rgba(189, 195, 199, 0.5);
+	padding: 0 10% 5% 10%;
+	/*border: solid 1px rgba(189, 195, 199, 0.6);
+	background-color: rgba(189, 195, 199, 0.5);*/
 	border-radius: 3px;
 }
 .plan_nuevo_label{
