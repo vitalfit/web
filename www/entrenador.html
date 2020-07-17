@@ -11,8 +11,10 @@
 	<meta name="format-detection" content="telephone=no" />
 
 	<link rel="stylesheet" href="mobileui/mui.min.css" type="text/css">
-	<link rel="stylesheet" href="custom/custom.css" type="text/css">
 	<link rel="stylesheet" href="node_modules/keen-ui/dist/keen-ui.min.css">
+	<link rel="stylesheet" href="node_modules/vuetify/dist/vuetify.min.css" type="text/css"></link>
+	<link rel="stylesheet" href="node_modules/vuetify/dist/vuetify.css" type="text/css"></link>
+	<link rel="stylesheet" href="custom/custom.css" type="text/css">
 	<link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons'>
 
 	<script src="index.js"></script>
@@ -26,9 +28,9 @@
 
 	<script src="mobileui/mui.min.js" type="text/javascript"></script>
 	<script src="custom/custom.js" type="text/javascript"></script>
-	<script src="node_modules/vuetify/dist/vuetify.min.css" type="text/css"></script>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
 	<!-- <script src="node_modules/keen-ui/dist/keen-ui.min.js"></script> -->
 
 
@@ -69,7 +71,8 @@
 				el: "#home-page",
 				data: {
 					alumnos: [],
-					alumnoSeleccionado: ""
+					alumnoSeleccionado: "",
+					search: ""
 				},
 				methods: {
 					nuevoAlumno: function() {
@@ -133,7 +136,16 @@
 					seleccionarAlumno(alumno) {
 						this.alumnoSeleccionado = alumno
 					}
-				}
+				},
+				computed: {
+					alumnosFiltrados() {
+						return this.alumnos.filter(alumno => {
+			             if(!this.search) return this.alumnos;
+			               return (alumno.nombre.toLowerCase().includes(this.search.toLowerCase()));
+						});
+        			}
+				},
+				vuetify: new Vuetify()
 			})
 
 			const nuevaSesion = new Vue({
@@ -187,7 +199,8 @@
 					volverHome: function() {
 						mui.viewport.showPage("home-page", "SLIDE_RIGHT")
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 
 			const alumnoNuevo = new Vue({
@@ -196,9 +209,9 @@
 					alumno: {
 						nombre: "",
 						apellido: "",
-						fechaDeNac: "",
-						nroContacto: "",
-						email: ""
+						fecha_nacimiento: "",
+						nro_contacto: "",
+						mail: ""
 					}
 				},
 				methods: {
@@ -227,13 +240,14 @@
 							homePage.alumnos.push(this.alumno)
 							this.alumno.nombre = ""
 							this.alumno.apellido = ""
-							this.alumno.fechaDeNac = ""
-							this.alumno.nroContacto = ""
-							this.alumno.email = ""
+							this.alumno.fecha_nacimiento = ""
+							this.alumno.nro_contacto = ""
+							this.alumno.mail = ""
 							mui.viewport.showPage("home-page", "SLIDE_RIGHT")
 						}
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 
 			const verAlumno = new Vue({
@@ -262,7 +276,8 @@
 						})
 						return false
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 
 			const planNuevo = new Vue({
@@ -349,7 +364,8 @@
 							mui.viewport.showPage("home-page", "SLIDE_RIGHT")
 						}
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 
 
@@ -379,7 +395,8 @@
 						this.ejercicios = []
 						mui.viewport.showPage("planNuevo-page", "SLIDE_RIGHT")
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 			
 
@@ -437,7 +454,8 @@
 						this.ejercicios = []
 						mui.viewport.showPage("nuevaSesion-page", "SLIDE_RIGHT")
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 
 			const verPlanes = new Vue({
@@ -466,7 +484,8 @@
 
 						})
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 
 			const verEjercicios = new Vue({
@@ -481,7 +500,8 @@
 						verSesiones.nombreEjercicio = this.ejercicios[value].nombre
 						mui.viewport.showPage("visualizarSesiones-page", "SLIDE_LEFT")
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 
 			const verSesiones = new Vue({
@@ -490,7 +510,8 @@
 					nombreEjercicio: "",
 					sesiones: []
 				},
-				methods: {}
+				methods: {},
+				vuetify: new Vuetify()
 			})
 
 			const asignarPlan = new Vue({
@@ -553,7 +574,8 @@
 						})
 						
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 
 			
@@ -574,7 +596,8 @@
 					irachangepassword: function(){
 						mui.viewport.showPage("changepassword-page", "SLIDE_LEFT");
 					}
-				}
+				},
+				vuetify: new Vuetify()
 			})
 		})
 	</script>
@@ -600,24 +623,40 @@
 					</div>
 					<div class="mui-page-body" id="home-body" style="overflow:scroll">
 						<div>
-							<div class="col-80">
+							<v-flex>
 								<p class="titulo">ALUMNOS</p>
-							</div>
-							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+							</v-flex>
+							<v-divider></v-divider>
 							<div class="col-80">
 								<br>
-								<span>
-									<input type="text" class="filtro_alumnos_input"
-										onkeyup="filtro('.filtro_alumnos_input', '.lista_alumnos')"
-										placeholder="Buscar por nombre">
-									<button class="agregar_alumno_boton" @click="nuevoAlumno">＋</button>
-								</span>
-								<ul class="lista_alumnos">
-									<li v-for="(alumno, index) in alumnos">
-										<a @click="seleccionarAlumno(alumno)"
-											onclick="desplegarOpcionesOnclick(this)">{{ alumno.nombre }}</a>
-									</li>
-								</ul>
+								<v-container>
+									<v-layout>
+										<v-flex>
+											<v-text-field type="text" label="Buscar por nombre" 
+											class="filtro_alumnos_input" v-model="search"
+												prepend-inner-icon="person_search"></v-text-field>
+										</v-flex>
+										<v-flex>
+											<v-btn deppressed icon outlined class="agregar_alumno_boton" @click="nuevoAlumno"><v-icon>person_add</v-icon></v-btn>
+										</v-flex>
+									</v-layout>
+								</v-container>
+								<v-expansion-panels popout focusable class="lista_alumnos">
+									<v-expansion-panel v-for="(alumno, index) in alumnosFiltrados">
+											<v-expansion-panel-header class="cabezal_expansion_panel"><p>{{ alumno.nombre }}</p></v-expansion-panel-header>
+											<v-expansion-panel-content>
+												<button v-on:click="verAlumno">Visualizar Alumno</button>
+												<v-divider></v-divider>
+												<button v-on:click="verPlanes">Visualizar Planes</button>
+												<v-divider></v-divider>
+												<button v-on:click="abrirPlanNuevo(alumno)">Nuevo Plan</button>
+												<v-divider></v-divider>
+												<button v-on:click="abrirNuevaSesion">Nueva Sesión</button>
+												<v-divider></v-divider>
+												<button v-on:click="asignacionPlan">Asignar Plan</button>
+											</v-expansion-panel-content>
+									</v-expansion-panel>
+								</v-expansion-panels>
 							</div>
 						</div>
 					</div>
