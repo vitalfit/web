@@ -35,14 +35,14 @@
 
 
 	<script>
-
+		URL = 'http://vitalfit-app.herokuapp.com'
 		$(document).ready(() => {
 
 			//******** INTERACCIONES CON LA BASE DE DATOS **********//
 
 			$.ajax({
 				type: 'GET',
-				url: 'https://app-personal-trainer.herokuapp.com/clientes/',
+				url: URL + '/clientes/',
 				xhrFields: { withCredentials: true },
 				crossDomain: true,
 				success: function (data) {
@@ -113,7 +113,7 @@
 						username = this.alumnoSeleccionado.username
 						$.ajax({
 							type: 'DELETE',
-							url: 'https://app-personal-trainer.herokuapp.com/clientes/' + username,
+							url: URL + '/clientes/' + username,
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function (data) {
@@ -125,7 +125,7 @@
 					logout: function () {
 						$.ajax({
 							type: 'GET',
-							url: 'https://app-personal-trainer.herokuapp.com/logout',
+							url: URL + '/logout',
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function (data) {
@@ -157,7 +157,7 @@
 				},
 				methods: {
 					async cargarDatos() {
-						URL = 'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/planes'
+						URL = URL + '' + '/clientes/' + this.alumno.username + '/planes'
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -170,7 +170,7 @@
 
 						})
 
-						URL =  'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/plan_asignado'
+						URL =  URL + '' + '/clientes/' + this.alumno.username + '/plan_asignado'
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -219,7 +219,7 @@
 						if(this.alumno.nombre != "" && this.alumno.apellido != "" && this.alumno.fechaDeNac != "" && this.alumno.nroContacto != "" && this.alumno.email != "") {
 							$.ajax({
 								type: 'POST',
-								url: 'https://app-personal-trainer.herokuapp.com/clientes/',
+								url: URL + '/clientes/',
 								xhrFields: { withCredentials: true },
 								crossDomain: true,
 								data: {
@@ -267,7 +267,7 @@
 						username = this.alumno.username
 						$.ajax({
 							type: 'POST',
-							url: 'https://app-personal-trainer.herokuapp.com/clientes/' + username + "/borrar",
+							url: URL + '/clientes/' + username + "/borrar",
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function(data){
@@ -317,7 +317,7 @@
 							console.log(planAux)
 							$.ajax({
 								type: 'POST',
-								url: 'https://app-personal-trainer.herokuapp.com/clientes/' + this.alumno.username + '/planes',
+								url: URL + '/clientes/' + this.alumno.username + '/planes',
 								xhrFields: { withCredentials: true },
 								crossDomain: true,
 								data: {
@@ -328,7 +328,7 @@
 									for (let i = 0; i < this.dias.length; i++) {
 										$.ajax({
 											type: 'POST',
-											url: 'https://app-personal-trainer.herokuapp.com/clientes/' + this.alumno.username + '/planes/' + responseData._id + '/dias',
+											url: URL + '/clientes/' + this.alumno.username + '/planes/' + responseData._id + '/dias',
 											xhrFields: { withCredentials: true },
 											crossDomain: true,
 											data: {
@@ -340,7 +340,7 @@
 												for (let j = 0; j < this.dias[i].ejercicios.length; j++) {
 													$.ajax({
 														type: 'POST',
-														url: 'https://app-personal-trainer.herokuapp.com/clientes/' + this.alumno.username + '/planes/' + responseData._id + '/dias/' + responseData2._id + '/ejercicios',
+														url: URL + '/clientes/' + this.alumno.username + '/planes/' + responseData._id + '/dias/' + responseData2._id + '/ejercicios',
 														xhrFields: { withCredentials: true },
 														crossDomain: true,
 														data: {
@@ -430,7 +430,7 @@
 							var diaId = nuevaSesion.planes[this.planSerial].dias[this.diaSerial]._id
 							var ejercicioId = this.ejercicios[i]._id
 
-							URL = 'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username +"/planes/" + planId + "/dias/" + diaId + "/ejercicios/" + ejercicioId + "/sesiones"
+							URL = URL + '' + '/clientes/' + this.alumno.username +"/planes/" + planId + "/dias/" + diaId + "/ejercicios/" + ejercicioId + "/sesiones"
 
 							$.ajax({
 								type: 'POST',
@@ -471,7 +471,7 @@
 						mui.viewport.showPage("visualizarEjercicios-page", "SLIDE_LEFT")
 					},
 					async cargarPlanes() {
-						URL = 'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/planes'
+						URL = URL + '' + '/clientes/' + this.alumno.username + '/planes'
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -524,7 +524,7 @@
 				},
 				methods: {
 					async cargarPlanes(){
-						URL =  'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/planes'
+						URL =  URL + '' + '/clientes/' + this.alumno.username + '/planes'
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -537,7 +537,7 @@
 
 						})
 						
-						URL =  'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username + '/plan_asignado'
+						URL =  URL + '' + '/clientes/' + this.alumno.username + '/plan_asignado'
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -557,7 +557,7 @@
 
 					asignarPlanSeleccionado: function(){
 
-						URL = 'https://app-personal-trainer.herokuapp.com' + '/clientes/' + this.alumno.username +"/plan_asignado"
+						URL = URL + '' + '/clientes/' + this.alumno.username +"/plan_asignado"
 
 						$.ajax({
 							type: 'POST',
@@ -585,7 +585,7 @@
 					logout: function(){
 						$.ajax({
 							type: 'GET',
-							url: 'https://app-personal-trainer.herokuapp.com/logout',
+							url: URL + '/logout',
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function(data){

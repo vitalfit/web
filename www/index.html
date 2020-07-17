@@ -12,8 +12,7 @@
 
 	<link rel="stylesheet" href="mobileui/mui.min.css" type="text/css">
 	<link rel="stylesheet" href="custom/custom.css" type="text/css">
-	<link rel="stylesheet" href="node_modules/vuetify/dist/vuetify.min.css" type="text/css"></link>
-	<link rel="stylesheet" href="node_modules/vuetify/dist/vuetify.css" type="text/css"></link>
+	<link rel="stylesheet" href="vuetify/vuetify.min.css" type="text/css"></link>
 	<link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons'>
 
 	<script src="index.js"></script>
@@ -74,24 +73,26 @@
 		</v-app>
 	</div>
 	<script>
-
+		URL = 'http://vitalfit-app.herokuapp.com'
 		const inicio_sesion_app = new Vue({
 			el: '#app',
 			methods: {
 				inicio_sesion: function () {
 					uname = $('#uname').val()
 					pword = $('#pword').val()
+					mui.busy(true)
 					$.ajax({
 						type: 'POST',
 						// beforeSend: function (request) {
 						// 	request.setRequestHeader("Access-Control-Allow-Origin", '*');
 						// },
-						url: 'https://app-personal-trainer.herokuapp.com/login',
+						url: URL + '/login',
 						crossDomain: true,
 						data: { 'username': uname, 'password': pword },
 						dataType: 'json',
 						xhrFields: { withCredentials: true },
 						success: function (responseData, textStatus, jqXHR) {
+							
 							var value = responseData;
 							//console.log(value)
 							//console.log(typeof (value.login))
@@ -106,26 +107,31 @@
 									type: 'GET',
 									xhrFields: { withCredentials: true },
 									crossDomain: true,
-									url: 'https://app-personal-trainer.herokuapp.com/myinfo',
+									url: URL + '/myinfo',
 									success: function (responseData) {
+										mui.busy(false)
 										var esAdmin = responseData.admin
 										if (esAdmin) {
 											document.location.href = "entrenador.html"
 										} else if (!esAdmin) {
 											document.location.href = "cliente.html"
 										}
+									},
+									error: ()=>{
+										mui.busy(false)
 									}
 								})
 								
 
 							} else if (value.login == false) {
-
+								mui.busy(false)
 								console.log("contra incorrecta")
 								$("#alerta").text("Usuario o Contraseña incorrecta.")
 								$('#pword').val("")
 							}
 						},
 						error: function (responseData, textStatus, errorThrown) {
+							mui.busy(false)
 							console.log(responseData)
 							console.log(errorThrown)
 							alert('POST failed.');
