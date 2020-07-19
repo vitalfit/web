@@ -79,6 +79,7 @@
 						mui.viewport.showPage("nuevoAlumno-page", 'SLIDE_LEFT')
 					},
 					verAlumno: function () {
+						console.log(this.alumnoSeleccionado)
 						verAlumno.alumno.nombre = this.alumnoSeleccionado.nombre.split(" ")[0]
 						verAlumno.alumno.apellido = this.alumnoSeleccionado.nombre.split(" ")[1]
 						verAlumno.alumno.username = this.alumnoSeleccionado.username
@@ -135,6 +136,8 @@
 					},
 					seleccionarAlumno(alumno) {
 						this.alumnoSeleccionado = alumno
+						console.log('Alumno seleccionado' )
+						console.log(this.alumnoSeleccionado)
 					}
 				},
 				computed: {
@@ -216,7 +219,7 @@
 				},
 				methods: {
 					confirmarAlumno: function () {
-						if(this.alumno.nombre != "" && this.alumno.apellido != "" && this.alumno.fechaDeNac != "" && this.alumno.nroContacto != "" && this.alumno.email != "") {
+						if(this.alumno.nombre != "" && this.alumno.apellido != "" && this.alumno.fecha_nacimiento != "" && this.alumno.nro_contacto != "" && this.alumno.mail != "") {
 							$.ajax({
 								type: 'POST',
 								url: URL + '/clientes/',
@@ -224,7 +227,7 @@
 								crossDomain: true,
 								data: {
 									'nombre': this.alumno.nombre + " " + this.alumno.apellido,
-									'username': this.alumno.nombre.toLowerCase() + "." + this.alumno.apellido.split(" ")[0].toLowerCase(),
+									'username': this.alumno.nombre.split(" ")[0].toLowerCase() + "." + this.alumno.apellido.split(" ")[0].toLowerCase(),
 									'admin': false,
 									'password': this.alumno.apellido,
 									'fecha_nacimiento': this.alumno.fecha_nacimiento,
@@ -643,7 +646,7 @@
 								</v-container>
 								<v-expansion-panels popout focusable class="lista_alumnos">
 									<v-expansion-panel v-for="(alumno, index) in alumnosFiltrados">
-											<v-expansion-panel-header class="cabezal_expansion_panel"><p>{{ alumno.nombre }}</p></v-expansion-panel-header>
+											<v-expansion-panel-header class="cabezal_expansion_panel" @click='seleccionarAlumno(alumno)'><p>{{ alumno.nombre }}</p></v-expansion-panel-header>
 											<v-expansion-panel-content>
 												<button v-on:click="verAlumno">Visualizar Alumno</button>
 												<v-divider></v-divider>
@@ -678,10 +681,10 @@
 							<p>Nombre:</p><input type="text" placeholder="Nombre" v-model="alumno.nombre"><br>
 							<p>Apellido:</p><input type="text" placeholder="Apellido" v-model="alumno.apellido"><br>
 							<p>Fecha de Nacimiento:</p><input type="date" placeholder="Fecha de Nacimiento"
-								v-model="alumno.fechaDeNac"><br>
+								v-model="alumno.fecha_nacimiento"><br>
 							<p>Nro. de Contacto:</p><input type="tel" placeholder="Nro. de Contacto"
-								v-model="alumno.nroContacto"><br>
-							<p>Email:</p><input type="email" placeholder="Email" v-model="alumno.email"><br><br>
+								v-model="alumno.nro_contacto"><br>
+							<p>mail:</p><input type="mail" placeholder="mail" v-model="alumno.mail"><br><br>
 							<button class="confirmar_boton" @click="confirmarAlumno">Confirmar</button>
 						</div>
 					</div>
@@ -705,7 +708,7 @@
 							<p v-text="alumno.fecha_nacimiento"></p>
 							<p class="propiedad">Nro. de Contacto:</p>
 							<p v-text="alumno.nro_contacto"></p>
-							<p class="propiedad">Email:</p>
+							<p class="propiedad">mail:</p>
 							<p v-text="alumno.mail"></p><br>
 						</div>
 						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
@@ -732,7 +735,7 @@
 							<div class="col-80">
 								<div>
 									<p class="plan_nuevo_label">Nombre del Plan: </p>
-									<input v-model="nombrePlan" type="text" placeholder="Ingrese Nuevo Nombre"
+									<input v-model="nombrePlan" type="text" placeholder="Ingrese Nombre del Plan"
 										class="nombre_plan_input">
 									<p class="plan_nuevo_label">Días: </p>
 									<span>
