@@ -256,7 +256,7 @@ function desplegarSesionesOnclick(event) {
 }
 
 function desplegarOpciones() {
-	let desplegarOpcionesHtml = $('<div class="desplegar_opciones"><br><button v-on:click="verAlumno">Visualizar Alumno</button><br><button v-on:click="verPlanes">Visualizar Planes</button><br><button v-on:click="abrirPlanNuevo(alumno)">Nuevo Plan</button><br><button v-on:click="abrirNuevaSesion">Nueva Sesión</button><br><button v-on:click="asignacionPlan">Asignar Plan</button><br></div>')
+	let desplegarOpcionesHtml = $('<v-expansion-panel-content class="desplegar_opciones"><br><button v-on:click="verAlumno">Visualizar Alumno</button><br><button v-on:click="verPlanes">Visualizar Planes</button><br><button v-on:click="abrirPlanNuevo(alumno)">Nuevo Plan</button><br><button v-on:click="abrirNuevaSesion">Nueva Sesión</button><br><button v-on:click="asignacionPlan">Asignar Plan</button><br></v-expansion-panel-content>')
 	$('li a', ".lista_alumnos").append(desplegarOpcionesHtml)
 	$('.desplegar_opciones').hide()
 }
@@ -314,11 +314,11 @@ function filtro(filtro, lista) {
 	input = $(filtro)
 	filter = input.val().toUpperCase()
 	ul = $(lista)
-	li = $('li', lista)
+	li = $('div', lista)
 
 	// Loop through all list items, and hide those who don't match the search query
 	for (i = 0; i < li.length; i++) {
-		a = $("a", li[i])
+		p = $("p", li[i])
 		txtValue = a.text()
 		if (txtValue.toUpperCase().indexOf(filter) > -1) {
 			li[i].style.display = ""

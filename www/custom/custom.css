@@ -211,6 +211,7 @@ button{
 	text-align: center;
 	list-style: none;
 	padding-left: 0px;
+	margin-bottom: 40px;
 }
 .lista_alumnos li{
 	padding-bottom: 10px;
@@ -324,11 +325,8 @@ button{
 	margin-bottom: 5px;
 	width: 65%;
 }
-.col-80 .agregar_alumno_boton{
-	width : 10%;
-	padding: 2px;
-	font-size: 15px;
-	font-weight: bold;
+div>button.agregar_alumno_boton{
+	margin-left: 10px;
 }
 .confirmar_boton{
 	width: 50%;
@@ -410,12 +408,8 @@ button.plan_cliente_dia_boton {
 	border-radius: 2px;
 }
 .col-80 .filtro_alumnos_input{
-	/* background-image: url('/css/searchicon.png'); Add a search icon to input */
-	background-position: 10px 12px; /* Position the search icon */
-	width: 87%; /* Full-width */
-	font-size: 16px; /* Increase font-size */
-	border: 1px solid #ddd; /* Add a grey border */
-	margin-bottom: 12px; /* Add some space below the input */
+	padding: 0;
+	margin: 0;
 }
 #nuevoAlumnoID p{
 	margin: 20px 0px 5px 0px;
@@ -472,6 +466,7 @@ button.plan_cliente_dia_boton {
 	font-size: 20px;
 	font-weight: bold;
 	text-align: center;
+	padding:20px;
 }
 .titulo_secundario {
 	font-size: 18px;
@@ -491,4 +486,15 @@ button.plan_cliente_dia_boton {
 }
 #elementos_sesion input{
 	margin: 0px 0px 10px 0px;
+}
+
+/*---------------------------------------------CAMBIOS A VUETIFY---------------------------------------*/
+
+div>div>button.cabezal_expansion_panel>p{
+	text-align: center;
+	font-size: 15px;
+	text-transform: uppercase;
+}
+.v-expansion-panel-content div.v-expansion-panel-content__wrap{
+	padding: 0 15px 0 15px;
 }
