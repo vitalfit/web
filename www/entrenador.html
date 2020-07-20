@@ -36,6 +36,7 @@
 
 	<script>
 		URL = 'https://vitalfit-app.herokuapp.com'
+		mui.busy(true)
 		$(document).ready(() => {
 
 			//******** INTERACCIONES CON LA BASE DE DATOS **********//
@@ -47,6 +48,7 @@
 				crossDomain: true,
 				success: function (data) {
 					homePage.alumnos = data
+					mui.busy(false)
 				}
 			})
 			/*
@@ -112,24 +114,28 @@
 					},
 					eliminarAlumno: function () {
 						username = this.alumnoSeleccionado.username
+						mui.busy(true)
 						$.ajax({
 							type: 'DELETE',
 							url: URL + '/clientes/' + username,
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function (data) {
+								mui.busy(false)
 								alert("Eliminado")
 							}
 						})
 					},
 
 					logout: function () {
+						mui.busy(true)
 						$.ajax({
 							type: 'GET',
 							url: URL + '/logout',
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function (data) {
+								mui.busy(false)
 								document.location.href = "index.html"
 							}
 						})
@@ -161,6 +167,7 @@
 				methods: {
 					async cargarDatos() {
 						URL = URL + '' + '/clientes/' + this.alumno.username + '/planes'
+						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -169,11 +176,13 @@
 							dataType: 'json',
 							success: (responseData) => {
 								this.planes = responseData
+								mui.busy(false)
 							}
 
 						})
 
 						URL =  URL + '' + '/clientes/' + this.alumno.username + '/plan_asignado'
+						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -182,8 +191,10 @@
 							dataType: 'json',
 							success: (responseData)=>{
 								this.plan_actual = responseData
+								mui.busy(false)
 							},
 							error: (responseData)=>{
+								mui.busy(false)
 								this.plan_actual = "No hay plan actual";
 							}
 
@@ -220,6 +231,7 @@
 				methods: {
 					confirmarAlumno: function () {
 						if(this.alumno.nombre != "" && this.alumno.apellido != "" && this.alumno.fecha_nacimiento != "" && this.alumno.nro_contacto != "" && this.alumno.mail != "") {
+							mui.busy(true)
 							$.ajax({
 								type: 'POST',
 								url: URL + '/clientes/',
@@ -236,6 +248,7 @@
 								},
 								dataType: 'json',
 								success: (responseData) => {
+									mui.busy(false)
 									alert(responseData)
 								}
 
@@ -268,12 +281,14 @@
 				methods: {
 					eliminarAlumno: function() {
 						username = this.alumno.username
+						mui.busy(true)
 						$.ajax({
 							type: 'POST',
 							url: URL + '/clientes/' + username + "/borrar",
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function(data){
+								mui.busy(false)
 								alert("Eliminado")
 							}
 						})
@@ -318,6 +333,7 @@
 								dias: this.dias
 							}
 							console.log(planAux)
+							mui.busy(true)
 							$.ajax({
 								type: 'POST',
 								url: URL + '/clientes/' + this.alumno.username + '/planes',
@@ -355,6 +371,7 @@
 														},
 														dataType: 'json',
 														success: (r) => {
+															mui.busy(false)
 															console.log(r)
 														}
 													})
@@ -433,11 +450,11 @@
 							var diaId = nuevaSesion.planes[this.planSerial].dias[this.diaSerial]._id
 							var ejercicioId = this.ejercicios[i]._id
 
-							URL = URL + '' + '/clientes/' + this.alumno.username +"/planes/" + planId + "/dias/" + diaId + "/ejercicios/" + ejercicioId + "/sesiones"
-
+							URL2 = URL + '' + '/clientes/' + this.alumno.username +"/planes/" + planId + "/dias/" + diaId + "/ejercicios/" + ejercicioId + "/sesiones"
+							mui.busy(true)
 							$.ajax({
 								type: 'POST',
-								url: URL,
+								url: URL2,
 								xhrFields: { withCredentials: true },
 								crossDomain: true,
 								data: {
@@ -449,7 +466,7 @@
 								},
 								dataType: 'json',
 								success: (responseData)=>{
-									
+									mui.busy(false)
 								}
 							})
 
@@ -475,6 +492,7 @@
 					},
 					async cargarPlanes() {
 						URL = URL + '' + '/clientes/' + this.alumno.username + '/planes'
+						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -482,6 +500,7 @@
 							crossDomain: true,
 							dataType: 'json',
 							success: (responseData) => {
+								mui.busy(false)
 								this.planes = responseData
 							}
 
@@ -528,6 +547,7 @@
 				methods: {
 					async cargarPlanes(){
 						URL =  URL + '' + '/clientes/' + this.alumno.username + '/planes'
+						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
 							url: URL,
@@ -535,23 +555,27 @@
 							crossDomain: true,
 							dataType: 'json',
 							success: (responseData)=>{
+								mui.busy(false)
 								this.planes = responseData
 							}
 
 						})
 						
-						URL =  URL + '' + '/clientes/' + this.alumno.username + '/plan_asignado'
+						URL2 =  URL + '' + '/clientes/' + this.alumno.username + '/plan_asignado'
+						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
-							url: URL,
+							url: URL2,
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							dataType: 'json',
 							success: (responseData)=>{
 								this.plan_actual = responseData
+								mui.busy(false)
 							},
 							error: (responseData)=>{
 								this.plan_actual = "No hay plan actual";
+								mui.busy(false)
 							}
 
 						})
@@ -561,7 +585,7 @@
 					asignarPlanSeleccionado: function(){
 
 						URL = URL + '' + '/clientes/' + this.alumno.username +"/plan_asignado"
-
+						mui.busy(true)
 						$.ajax({
 							type: 'POST',
 							url: URL,
@@ -572,7 +596,7 @@
 							},
 							dataType: 'json',
 							success: (responseData)=>{
-								
+								mui.busy(false)
 							}
 						})
 						
@@ -586,12 +610,14 @@
 				el: "#menu-panel",
 				methods:{
 					logout: function(){
+						mui.busy(true)
 						$.ajax({
 							type: 'GET',
 							url: URL + '/logout',
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							success: function(data){
+								mui.busy(false)
 								document.location.href = "index.html"
 							}
 						})
