@@ -36,11 +36,11 @@
 
 	<script>
 		URL = 'https://vitalfit-app.herokuapp.com'
-		mui.busy(true)
+		
 		$(document).ready(() => {
 
 			//******** INTERACCIONES CON LA BASE DE DATOS **********//
-
+			mui.busy(true)
 			$.ajax({
 				type: 'GET',
 				url: URL + '/clientes/',
