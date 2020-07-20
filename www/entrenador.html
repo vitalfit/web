@@ -166,11 +166,11 @@
 				},
 				methods: {
 					async cargarDatos() {
-						URL = URL + '' + '/clientes/' + this.alumno.username + '/planes'
+						URL2 = URL + '' + '/clientes/' + this.alumno.username + '/planes'
 						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
-							url: URL,
+							url: URL2,
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							dataType: 'json',
@@ -181,11 +181,11 @@
 
 						})
 
-						URL =  URL + '' + '/clientes/' + this.alumno.username + '/plan_asignado'
+						URL2 =  URL + '' + '/clientes/' + this.alumno.username + '/plan_asignado'
 						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
-							url: URL,
+							url: URL2,
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							dataType: 'json',
@@ -491,11 +491,11 @@
 						mui.viewport.showPage("visualizarEjercicios-page", "SLIDE_LEFT")
 					},
 					async cargarPlanes() {
-						URL = URL + '' + '/clientes/' + this.alumno.username + '/planes'
+						URL2 = URL + '' + '/clientes/' + this.alumno.username + '/planes'
 						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
-							url: URL,
+							url: URL2,
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							dataType: 'json',
@@ -546,11 +546,11 @@
 				},
 				methods: {
 					async cargarPlanes(){
-						URL =  URL + '' + '/clientes/' + this.alumno.username + '/planes'
+						URL2 =  URL + '' + '/clientes/' + this.alumno.username + '/planes'
 						mui.busy(true)
 						await $.ajax({
 							type: 'GET',
-							url: URL,
+							url: URL2,
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							dataType: 'json',
@@ -584,11 +584,11 @@
 
 					asignarPlanSeleccionado: function(){
 
-						URL = URL + '' + '/clientes/' + this.alumno.username +"/plan_asignado"
+						URL2 = URL + '' + '/clientes/' + this.alumno.username +"/plan_asignado"
 						mui.busy(true)
 						$.ajax({
 							type: 'POST',
-							url: URL,
+							url: URL2,
 							xhrFields: { withCredentials: true },
 							crossDomain: true,
 							data: {
