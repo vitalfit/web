@@ -10,8 +10,14 @@
 	<meta name="msapplication-tap-highlight" content="no" />
 	<meta name="format-detection" content="telephone=no" />
 
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
 	<link rel="stylesheet" href="mobileui/mui.min.css" type="text/css">
 	<link rel="stylesheet" href="custom/custom.css" type="text/css">
+
+	<link rel="stylesheet" href="vuetify/vuetify.min.css" type="text/css">
+	</link>
 	<link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons'>
 	<!-- <link rel="stylesheet" href="node_modules/keen-ui/dist/keen-ui.min.css"> -->
 
@@ -26,7 +32,6 @@
 
 	<script src="mobileui/mui.min.js" type="text/javascript"></script>
 	<script src="custom/custom.js" type="text/javascript"></script>
-	<script src="vuetify/vuetify.min.css" type="text/css"></script>
 
 	<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 
@@ -35,333 +40,7 @@
 	<!-- <script src="node_modules/keen-ui/dist/keen-ui.min.js"></script> -->
 
 
-	<script>
-		URL = 'https://vitalfit-app.herokuapp.com'
-		$(document).ready(() => {
-
-			$.ajax({
-				type: 'GET',
-				url: URL + '/myinfo',
-				xhrFields: { withCredentials: true },
-				crossDomain: true,
-				success: function (data) {
-					homePage.alumno = data
-				}
-			})
-
-
-			const homePage = new Vue({
-				el: "#home-page",
-				data: {
-					alumno: {
-						username: String,
-						nombre: String,
-						nacimiento: Date,
-						nro_contacto: Number,
-						mail: String,
-						planes: Array
-					},
-					colors: [
-						'indigo',
-						'warning',
-						'pink darken-2',
-						'red lighten-1',
-						'deep-purple accent-4',
-					],
-					slides: [
-						'First',
-						'Second',
-						'Third',
-						'Fourth',
-						'Fifth',
-					]
-
-				},
-				methods: {
-					verPlanes: function () {
-						$.ajax({
-							type: 'GET',
-							url: URL + '/myinfo/planes',
-							xhrFields: { withCredentials: true },
-							crossDomain: true,
-							success: function (data) {
-								planesPage.planes = data
-							}
-						})
-						mui.viewport.showPage("planes-page", 'SLIDE_LEFT')
-					},
-					verPlanActual: function () {
-						$.ajax({
-							type: 'GET',
-							url: URL + '/myinfo/plan_asignado',
-							xhrFields: { withCredentials: true },
-							crossDomain: true,
-							success: function (data) {
-								planPageAsignado.plan = data
-							}
-						})
-						mui.viewport.showPage("plan-page-asignado", 'SLIDE_LEFT')
-					},
-					logout: function () {
-						$.ajax({
-							type: 'GET',
-							url: URL + '/logout',
-							xhrFields: { withCredentials: true },
-							crossDomain: true,
-							success: function (data) {
-								document.location.href = "index.html"
-							}
-						})
-					}
-
-				},
-				vuetify: new Vuetify()
-			})
-
-			const planesPage = new Vue({
-				el: "#planes-page",
-				data: {
-					planes: []
-				},
-				methods: {
-					handleSelectDia: function (dia) {
-						diaPage.dia = dia;
-						diaPage.plan = this.plan;
-						mui.viewport.showPage("dia-page", "SLIDE_LEFT");
-					}
-				}
-			})
-
-			const menuPanel = new Vue({
-				el: "#menu-panel",
-				methods: {
-					logout: function () {
-						$.ajax({
-							type: 'GET',
-							url: URL + '/logout',
-							xhrFields: { withCredentials: true },
-							crossDomain: true,
-							success: function (data) {
-								document.location.href = "index.html"
-							}
-						})
-					},
-					irachangepassword: function () {
-						mui.viewport.showPage("changepassword-page", "SLIDE_LEFT");
-					}
-				}
-			})
-
-			const planPageAsignado = new Vue({
-				el: "#plan-page-asignado",
-				data: {
-					plan: Object
-				},
-				methods: {
-					handleSelectDia: function (dia) {
-						diaPageAsignado.dia = dia;
-						diaPageAsignado.plan = this.plan;
-						mui.viewport.showPage("dia-page-asignado", "SLIDE_LEFT");
-					}
-				}
-
-			})
-
-			const diaPage = new Vue({
-				el: "#dia-page",
-				data: {
-					dia: Object,
-					plan: Object
-				},
-				methods: {
-					borrar: function (ejercicio1, sesion1) {
-						urlSesiones = `https://app-personal-trainer.herokuapp.com/myinfo/planes/${this.plan._id}/dias/${this.dia._id}/ejercicios/${ejercicio1._id}/sesiones/${sesion1._id}`
-						console.log(urlSesiones);
-						POSTData = "Te amo"
-						$.ajax({
-							type: 'POST',
-							dataType: "json",
-							data: POSTData,
-							url: urlSesiones,
-							xhrFields: { withCredentials: true },
-							crossDomain: true,
-							success: function (data) {
-								mui.viewport.showPage("dia-page-asignado", "SLIDE_LEFT");
-							}
-						})
-
-					},
-					verSesiones: function (value) {
-						verSesiones.sesiones = value.sesiones
-						verSesiones.nombreEjercicio = value.nombre
-						mui.viewport.showPage("visualizarSesiones-page", "SLIDE_LEFT")
-					},
-					graph: function (ejercicio) {
-						valores = []
-						numeros = []
-						i = 0
-						for (const sesion in ejercicio.sesiones) {
-							if (sesion.intensidad)
-								i++;
-							valores.push(sesion.intensidad);
-							numeros.push(i);
-						}
-						zingchart.render({
-							id: 'myChart',
-							data: {
-								type: 'line',
-								series: [
-									{ values: valores },
-									{ values: numeros }
-								]
-							}
-						});
-					}
-				}
-
-			})
-
-			const verSesiones = new Vue({
-				el: '#visualizarSesiones-page',
-				data: {
-					nombreEjercicio: "",
-					sesiones: []
-				},
-				methods: {}
-			})
-
-			const diaPageAsignado = new Vue({
-				el: "#dia-page-asignado",
-				data: {
-					dia: Object,
-					sesion: String,
-					plan: Object
-				},
-				methods: {
-					handleSelectEjercicio: function (ejercicio) {
-						ejercicioPage.idDia = diaPageAsignado.dia._id;
-						ejercicioPage.ejercicio = ejercicio;
-						ejercicioPage.sesion = {
-							nombre: "",
-							series: "",
-							repeticiones: "",
-							intensidad: "",
-							tiempo: ""
-						}
-						mui.viewport.showPage("ejercicio-page", "SLIDE_LEFT");
-					},
-					seleccionarSesion: function (sesionSelected) {
-						this.sesion = sesionSelected;
-					},
-					borrar: function (ejercicio1, sesion1) {
-						urlSesiones = `https://app-personal-trainer.herokuapp.com/myinfo/planes/${this.plan._id}/dias/${this.dia._id}/ejercicios/${ejercicio1._id}/sesiones/${sesion1._id}`
-						console.log(urlSesiones);
-						POSTData = "Te amo"
-						$.ajax({
-							type: 'POST',
-							dataType: "json",
-							data: POSTData,
-							url: urlSesiones,
-							xhrFields: { withCredentials: true },
-							crossDomain: true,
-							success: function (data) {
-								mui.viewport.showPage("dia-page-asignado", "SLIDE_LEFT");
-							}
-						})
-
-					}
-				},
-				// mounted(){
-				// 		valores = []
-				// 		numeros = []
-				// 		i = 0
-				// 		for(const sesion in ejercicio.sesiones) {
-				// 			if(sesion.intensidad)
-				// 			i++;
-				// 			valores.push(sesion.intensidad);
-				// 			numeros.push(i);
-				// 		}
-				// 		zingchart.render({
-				// 		id: 'myChart',
-				// 		data: {
-				// 			type: 'line',
-				// 			series: [
-				// 			{ values: valores},
-				// 			{ values: numeros}
-				// 			]
-				// 		}
-				// 		});
-				// 	}
-
-
-
-
-			})
-
-			const ejercicioPage = new Vue({
-				el: "#ejercicio-page",
-				data: {
-					plan: Object,
-					ejercicio: Object,
-					idDia: String,
-					sesion: {
-						nombre: "",
-						series: "",
-						repeticiones: "",
-						intensidad: "",
-						tiempo: ""
-					}
-				},
-				methods: {
-					confirmarSesionEjercicios: function () {
-						if (this.sesion.nombre != "" && this.sesion.series != "" && this.sesion.repeticiones != "" && this.sesion.intensidad != "" && this.sesion.tiempo != "") {
-							idEjercicio = this.ejercicio._id;
-							POSTData = this.sesion;
-							urlSesiones = URL + '/myinfo/plan_asignado/dias/' + this.idDia + '/ejercicios/' + idEjercicio + '/sesiones'
-							$.ajax({
-								type: 'POST',
-								dataType: "json",
-								data: POSTData,
-								url: urlSesiones,
-								xhrFields: { withCredentials: true },
-								crossDomain: true,
-								success: function (data) {
-									mui.viewport.showPage("dia-page-asignado", "SLIDE_RIGHT");
-								}
-							})
-						}
-
-					}
-				}
-
-			})
-
-			const changepasswordPage = new Vue({
-				el: "#changepassword-page",
-				data: {
-					password: Object
-				},
-				methods: {
-					changepassword: function () {
-						POSTData = ejercicioPage.password;
-						$.ajax({
-							type: 'POST',
-							dataType: "json",
-							data: {
-								'newPassword': this.password.password
-							},
-							url: "https://app-personal-trainer.herokuapp.com/myinfo/changepassword",
-							xhrFields: { withCredentials: true },
-							crossDomain: true,
-							success: function (data) {
-								alert("Contraseña cambiada");
-							}
-						})
-					}
-				}
-			})
-		})
-	</script>
+	<script src="custom/cliente.js"></script>
 
 
 </head>
@@ -385,26 +64,42 @@
 						<a class="mui-headmenu" href="#"></a>
 					</div>
 					<div class="mui-page-body" id="home-body">
-						<div>
-							<div class="col-80">
-								<p class="titulo">Bienvenido</p>
-								<p class="titulo_secundario">{{alumno.nombre}}</p>
-							</div>
-							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
-							<div class="col-80">
-							<v-carousel cycle height="100%" hide-delimiter-background show-arrows-on-hover>
-								<v-carousel-item v-for="(slide, i) in slides" :key="i">
-									<v-sheet :color="colors[i]" height="100%">
-										<v-row class="fill-height" align-item="center" justify="center">
-											<div class="display-3">{{ slide }} Slide</div>
+						<!-- <v-container  fill-height> -->
+							<v-carousel style="height: 100%;" :light='true' 
+							:next-icon='false'
+							:prev-icon='false'
+							:continuous="false"
+							>
+								<v-carousel-item v-for="(ejercicio, i) in diaSeleccionado.ejercicios" :key="i">
+									<v-sheet height="100%" background='black'>
+										<br>
+										<v-row class="fill-height" align="center" justify="center">
+											<div class="col-80">
+												{{ejercicio.nombre}}
+											</div>
+											<div class="col-80">
+												{{ejercicio.series}}
+											</div>
+											<div class="col-80">
+												{{ejercicio.repeticiones}}
+											</div>
+											<div class="col-80">
+												{{ejercicio.intensidad}}
+											</div>
+											<div class="col-80">
+												{{ejercicio.tiempo}}
+											</div>
+											<div class="col-80">
+												<v-btn> CARGAR SESION</v-btn>
+											</div>
 										</v-row>
 									</v-sheet>
 								</v-carousel-item>
 							</v-carousel>
-						</div>
-						</div>
+						<!-- </v-container> -->
 					</div>
 				</div>
+
 
 
 				<!-- TODOS LOS PLANES -->
@@ -634,13 +329,13 @@
 				<!-- Optional.Toolbar out of mui-viewport to be omnipresent. Remove if not needed. -->
 				<!-- Opcional. Barra de herramientas fuera de mui-viewport para ser omnipresente. Elimínalo si no lo necesitas. -->
 
-				<div class="mui-tabbar" id="footer">
-					<ul class="mui-tabbar-list">
-						<li class="mui-tabbar-button"><a href="#" id="tabbar-button1"></a></li>
-						<li class="mui-tabbar-button"><a href="#" id="tabbar-button2"></a></li>
-						<li class="mui-tabbar-button"><a href='#' id="tabbar-button3"></a></li>
-					</ul>
-				</div>
+				<!-- <div class="mui-tabbar" id="footer">
+				<ul class="mui-tabbar-list">
+					<li class="mui-tabbar-button"><a href="#" id="tabbar-button1"></a></li>
+					<li class="mui-tabbar-button"><a href="#" id="tabbar-button2"></a></li>
+					<li class="mui-tabbar-button"><a href='#' id="tabbar-button3"></a></li>
+				</ul>
+			</div> -->
 			</div>
 
 			<!-- mui-screen level panel -->
