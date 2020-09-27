@@ -65,37 +65,34 @@
 					</div>
 					<div class="mui-page-body" id="home-body">
 						<!-- <v-container  fill-height> -->
-							<v-carousel style="height: 100%;" :light='true' 
-							:next-icon='false'
-							:prev-icon='false'
-							:continuous="false"
-							>
-								<v-carousel-item v-for="(ejercicio, i) in diaSeleccionado.ejercicios" :key="i">
-									<v-sheet height="100%" background='black'>
-										<br>
-										<v-row class="fill-height" align="center" justify="center">
-											<div class="col-80">
-												{{ejercicio.nombre}}
-											</div>
-											<div class="col-80">
-												{{ejercicio.series}}
-											</div>
-											<div class="col-80">
-												{{ejercicio.repeticiones}}
-											</div>
-											<div class="col-80">
-												{{ejercicio.intensidad}}
-											</div>
-											<div class="col-80">
-												{{ejercicio.tiempo}}
-											</div>
-											<div class="col-80">
-												<v-btn> CARGAR SESION</v-btn>
-											</div>
-										</v-row>
-									</v-sheet>
-								</v-carousel-item>
-							</v-carousel>
+						<v-carousel style="height: 100%;" :light='true' :next-icon='false' :prev-icon='false'
+							:continuous="false">
+							<v-carousel-item v-for="(ejercicio, i) in diaSeleccionado.ejercicios" :key="i">
+								<v-sheet height="100%" background='black'>
+									<br>
+									<v-row class="fill-height" align="center" justify="center">
+										<div class="col-80">
+											{{ejercicio.nombre}}
+										</div>
+										<div class="col-80">
+											{{ejercicio.series}}
+										</div>
+										<div class="col-80">
+											{{ejercicio.repeticiones}}
+										</div>
+										<div class="col-80">
+											{{ejercicio.intensidad}}
+										</div>
+										<div class="col-80">
+											{{ejercicio.tiempo}}
+										</div>
+										<div class="col-80">
+											<v-btn @click="handleSelectEjercicio(ejercicio)"> CARGAR SESION</v-btn>
+										</div>
+									</v-row>
+								</v-sheet>
+							</v-carousel-item>
+						</v-carousel>
 						<!-- </v-container> -->
 					</div>
 				</div>
@@ -142,8 +139,8 @@
 						</div>
 						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 						<div class="col-80">
-							<button class="planes_alumno_boton" v-for="dia in plan.dias"
-								@click="handleSelectDia(dia)">{{dia.nombre}}</button>
+							<v-btn class="planes_alumno_boton" v-for="dia in plan.dias"
+								@click="handleSelectDia(dia)">{{dia.nombre}}</v-btn>
 						</div>
 					</div>
 				</div>
@@ -176,8 +173,8 @@
 									<p class="lista_ejercicio_elemento">Tiempo: {{ejercicio.tiempo}}</p>
 									<hr
 										style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
-									<button class="ver_sesiones_boton" @click="handleSelectEjercicio(ejercicio)">Agregar
-										Sesion</button>
+									<v-btn class="ver_sesiones_boton" @click="handleSelectEjercicio(ejercicio)">Agregar
+										Sesion</v-btn>
 								</div>
 								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 								<br>
@@ -202,25 +199,25 @@
 						<p class="titulo">{{ejercicio.nombre}}</p>
 						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 						<div class="col-80" id="elementos_sesion">
-							<p class="sesion_elemento">Nombre:</p><input type="String" placeholder="Nombre de sesion"
+							<p class="sesion_elemento">Nombre:</p><input id="sesion_nombre_ejercicio" type="String" placeholder="Nombre de ejercicio"
 								v-model="sesion.nombre">
 							<br>
-							<p class="sesion_elemento">Series:</p><input type="Number" placeholder="Series realizadas"
+							<p class="sesion_elemento">Series:</p><input id="sesion_series_ejercicio" type="Number" placeholder="Series realizadas"
 								v-model="sesion.series">
 							<br>
-							<p class="sesion_elemento">Repeticiones:</p><input type="Number"
+							<p class="sesion_elemento">Repeticiones:</p><input id="sesion_repeticiones_ejercicio" type="Number"
 								placeholder="Repeticiones realizadas" v-model="sesion.repeticiones">
 							<br>
 							<p class="sesion_elemento">Intensidad:</p><input type="Number"
 								placeholder="Intensidad Alcanzada" v-model="sesion.intensidad">
 							<br>
-							<p class="sesion_elemento">Tiempo:</p><input type="Number" placeholder="Tiempo de Ejecución"
+							<p class="sesion_elemento">Tiempo:</p><input id="sesion_tiempo_ejercicio" type="Number" placeholder="Tiempo de Ejecución"
 								v-model="sesion.tiempo">
 							<br>
 						</div>
 						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 						<br>
-						<button class="confirmar_boton" @click="confirmarSesionEjercicios">Confirmar</button>
+						<v-btn class="confirmar_boton" @click="confirmarSesionEjercicios">Confirmar</v-btn>
 					</div>
 				</div>
 
@@ -253,8 +250,8 @@
 									<p class="lista_ejercicio_elemento">Tiempo: {{ejercicio.tiempo}}</p>
 									<hr
 										style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
-									<button class="ver_sesiones_boton" @click="verSesiones(ejercicio)">Ver
-										Sesiones</button>
+									<v-btn class="ver_sesiones_boton" @click="verSesiones(ejercicio)">Ver
+										Sesiones</v-btn>
 								</div>
 								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 								<br>
@@ -322,26 +319,28 @@
 						</div>
 						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 						<br>
-						<button class="confirmar_boton" @click="changepassword">Confirmar</button>
+						<v-btn class="confirmar_boton" @click="changepassword">Confirmar</v-btn>
 					</div>
 				</div>
 
-				<!-- Optional.Toolbar out of mui-viewport to be omnipresent. Remove if not needed. -->
-				<!-- Opcional. Barra de herramientas fuera de mui-viewport para ser omnipresente. Elimínalo si no lo necesitas. -->
 
-				<!-- <div class="mui-tabbar" id="footer">
-				<ul class="mui-tabbar-list">
-					<li class="mui-tabbar-button"><a href="#" id="tabbar-button1"></a></li>
-					<li class="mui-tabbar-button"><a href="#" id="tabbar-button2"></a></li>
-					<li class="mui-tabbar-button"><a href='#' id="tabbar-button3"></a></li>
-				</ul>
-			</div> -->
+				<!-- SELECCIONAR DIA -->
+				<div id='seleccionarDia-page' class="mui-page">
+					<div class="mui-page-header">
+						<a class="mui-backarrow-home" href="#"></a>
+						<div cla21ss='mui-page-title'>SELECCIONAR DIA</div>
+						<a class="mui-headmenu" href="#"></a>
+					</div>
+					<div class="mui-page-body mui-scrollable" id="second-body">
+						<v-btn @click="asignarDia(dia)" v-for="(dia, i) in dias" :key="i" label="Standard" class="col-80">{{dia.nombre}}</v-btn><br>
+					</div>
+				</div>
+
+				<!-- mui-screen level panel -->
+				<!-- Panel a nivel de mui-screen -->
+
+
 			</div>
-
-			<!-- mui-screen level panel -->
-			<!-- Panel a nivel de mui-screen -->
-
-
 		</div>
 		<div id="menu-panel" class="mui-panel">
 			<div class="mui-panel-header">
@@ -350,8 +349,9 @@
 			<div class="mui-panel-body">
 				<div>
 					<ul id='menuoptions' class='mui-list'>
-						<li><a @click="logout">Cerrar sesión</li></a>
-						<li><a @click="irachangepassword">Cambiar contraseña</li></a>
+						<li><a @click="seleccionarDia">Seleccionar dia</a></li>
+						<li><a @click="logout">Cerrar sesión</a></li>
+						<li><a @click="irachangepassword">Cambiar contraseña</a></li>
 					</ul>
 				</div>
 			</div>

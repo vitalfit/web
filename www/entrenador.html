@@ -12,7 +12,8 @@
 
 	<link rel="stylesheet" href="mobileui/mui.min.css" type="text/css">
 	<!-- <link rel="stylesheet" href="node_modules/keen-ui/dist/keen-ui.min.css"> -->
-	<link rel="stylesheet" href="vuetify/vuetify.min.css" type="text/css"></link>
+	<link rel="stylesheet" href="vuetify/vuetify.min.css" type="text/css">
+	</link>
 	<!-- <link rel="stylesheet" href="node_modules/vuetify/dist/vuetify.css" type="text/css"></link> -->
 	<link rel="stylesheet" href="custom/custom.css" type="text/css">
 	<link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons'>
@@ -65,29 +66,35 @@
 								<v-container>
 									<v-layout>
 										<v-flex>
-											<v-text-field type="text" label="Buscar por nombre" 
-											class="filtro_alumnos_input" v-model="search"
+											<v-text-field type="text" label="Buscar por nombre"
+												class="filtro_alumnos_input" v-model="search"
 												prepend-inner-icon="person_search"></v-text-field>
 										</v-flex>
 										<v-flex>
-											<v-btn deppressed icon outlined class="agregar_alumno_boton" @click="nuevoAlumno"><v-icon>person_add</v-icon></v-btn>
+											<v-btn deppressed icon outlined class="agregar_alumno_boton"
+												@click="nuevoAlumno">
+												<v-icon>person_add</v-icon>
+											</v-btn>
 										</v-flex>
 									</v-layout>
 								</v-container>
 								<v-expansion-panels popout focusable class="lista_alumnos">
 									<v-expansion-panel v-for="(alumno, index) in alumnosFiltrados">
-											<v-expansion-panel-header class="cabezal_expansion_panel" @click='seleccionarAlumno(alumno)'><p>{{ alumno.nombre }}</p></v-expansion-panel-header>
-											<v-expansion-panel-content>
-												<button v-on:click="verAlumno">Visualizar Alumno</button>
-												<v-divider></v-divider>
-												<button v-on:click="verPlanes">Visualizar Planes</button>
-												<v-divider></v-divider>
-												<button v-on:click="abrirPlanNuevo(alumno)">Nuevo Plan</button>
-												<v-divider></v-divider>
-												<button v-on:click="abrirNuevaSesion">Nueva Sesión</button>
-												<v-divider></v-divider>
-												<button v-on:click="asignacionPlan">Asignar Plan</button>
-											</v-expansion-panel-content>
+										<v-expansion-panel-header class="cabezal_expansion_panel"
+											@click='seleccionarAlumno(alumno)'>
+											<p>{{ alumno.nombre }}</p>
+										</v-expansion-panel-header>
+										<v-expansion-panel-content>
+											<button v-on:click="verAlumno">Visualizar Alumno</button>
+											<v-divider></v-divider>
+											<button v-on:click="verPlanes">Visualizar Planes</button>
+											<v-divider></v-divider>
+											<button v-on:click="abrirPlanNuevo(alumno)">Nuevo Plan</button>
+											<v-divider></v-divider>
+											<button v-on:click="abrirNuevaSesion">Nueva Sesión</button>
+											<v-divider></v-divider>
+											<button v-on:click="asignacionPlan">Asignar Plan</button>
+										</v-expansion-panel-content>
 									</v-expansion-panel>
 								</v-expansion-panels>
 							</div>
@@ -96,7 +103,7 @@
 				</div>
 
 
-<!-- CARGA DE DATOS NUEVO ALUMNO -->
+				<!-- CARGA DE DATOS NUEVO ALUMNO -->
 
 
 				<div id='nuevoAlumno-page' class="mui-page">
@@ -121,7 +128,7 @@
 				</div>
 
 
-<!-- VISUALIZAR ALUMNO -->
+				<!-- VISUALIZAR ALUMNO -->
 
 
 				<div id='visualizarAlumno-page' class="mui-page">
@@ -142,12 +149,12 @@
 							<p v-text="alumno.mail"></p><br>
 						</div>
 						<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
-						<button class="confirmar_boton" @click="eliminarAlumno"> Eliminar usuario </button>
+						<button class="confirmar_boton" @click="eliminarAlumno" disabled> Eliminar usuario </button>
 					</div>
 				</div>
 
 
-<!-- PLAN NUEVO -->
+				<!-- PLAN NUEVO -->
 
 
 				<div id='planNuevo-page' class="mui-page">
@@ -172,11 +179,12 @@
 										<input type="text" class="nombre_dia_input" v-model="nombreDia"
 											placeholder="Ingrese Nombre Dia">
 										<button id="nuevoDia" class="agregar_boton" v-on:click="agregarDia">＋</button>
-										<button id="quitarDia" class="quitar_boton" v-on:click="quitarDia">&minus;</button>
+										<button id="quitarDia" class="quitar_boton"
+											v-on:click="quitarDia">&minus;</button>
 									</span>
 								</div>
 							</div>
-							<div class= "col-80">
+							<div class="col-80">
 								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 								<ul class="lista_dias">
 									<li v-for="(dia, index) in dias">
@@ -184,10 +192,10 @@
 									</li>
 								</ul>
 								<br>
-								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">							
-								<br>								
+								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+								<br>
 							</div>
-							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">	
+							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 							<br>
 							<button class="confirmar_boton" @click="confirmarPlan">Confirmar</button>
 						</div>
@@ -195,7 +203,7 @@
 				</div>
 
 
-<!-- PLAN NUEVO - DIA NUEVO -->
+				<!-- PLAN NUEVO - DIA NUEVO -->
 
 
 				<div id='diaNuevo-page' class="mui-page">
@@ -210,9 +218,11 @@
 								<p class="titulo">{{nombreDia}}</p>
 							</div>
 							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
-							<div class= "col-80">
-								<button id="nuevoEjercicio" class="agregar_ejercicio_boton" v-on:click="agregarEjercicio">Agregar Ejercicio</button>
-								<button id="quitarEjercicio" class="quitar_boton" v-on:click="quitarEjercicio">&minus;</button>
+							<div class="col-80">
+								<button id="nuevoEjercicio" class="agregar_ejercicio_boton"
+									v-on:click="agregarEjercicio">Agregar Ejercicio</button>
+								<button id="quitarEjercicio" class="quitar_boton"
+									v-on:click="quitarEjercicio">&minus;</button>
 							</div>
 							<ul class="lista_ejercicios">
 								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
@@ -233,7 +243,8 @@
 										<br>
 									</div>
 									<br>
-									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<hr
+										style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 								</li>
 							</ul>
 							<br>
@@ -243,7 +254,7 @@
 				</div>
 
 
-<!-- SESION NUEVA -->
+				<!-- SESION NUEVA -->
 
 
 				<div id="nuevaSesion-page" class="mui-page">
@@ -258,7 +269,8 @@
 							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 							<br>
 							<div class="col-80">
-								<input type="text" class="filtro_planes_input" onkeyup="filtro('.filtro_planes_input', '.lista_planes')" placeholder="Buscar plan">
+								<input type="text" class="filtro_planes_input"
+									onkeyup="filtro('.filtro_planes_input', '.lista_planes')" placeholder="Buscar plan">
 								<ul class="lista_planes">
 									<li v-for='(plan, index1) in planes'>
 										<a onclick="desplegarDiasOnclick(this)">{{plan.nombre}}</a>
@@ -270,7 +282,7 @@
 				</div>
 
 
-<!-- SESION NUEVA - EJERCICIOS -->
+				<!-- SESION NUEVA - EJERCICIOS -->
 
 
 				<div id='nuevaSesionEjercicios-page' class="mui-page">
@@ -283,24 +295,33 @@
 						<div id="nuevaSesionEjercicios-app">
 							<p class="titulo">INGRESAR SESIÓN</p>
 							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
-							<div class= "col-80">
+							<div class="col-80">
 							</div>
 							<ul class="lista_sesion_ejercicios">
 								<li v-for="ejercicio in ejercicios">
-									<div class= "col-80">
-										<span><p>{{ejercicio.nombre}}</p></span>
-										<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
-										<p class="lista_ejercicio_elemento">Series:</p><input type="Number" placeholder="Número de Series" v-model="ejercicio.series">
+									<div class="col-80">
+										<span>
+											<p>{{ejercicio.nombre}}</p>
+										</span>
+										<hr
+											style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+										<p class="lista_ejercicio_elemento">Series:</p><input type="Number"
+											placeholder="Número de Series" v-model="ejercicio.series">
 										<br>
-										<p class="lista_ejercicio_elemento">repeticiones:</p><input type="Number" placeholder="Número de Repeticiones" v-model="ejercicio.repeticiones">
+										<p class="lista_ejercicio_elemento">repeticiones:</p><input type="Number"
+											placeholder="Número de Repeticiones" v-model="ejercicio.repeticiones">
 										<br>
-										<p class="lista_ejercicio_elemento">Intensidad:</p><input type="Number" placeholder="Intensidad Alcanzada" v-model="ejercicio.intensidad">
+										<p class="lista_ejercicio_elemento">Intensidad:</p><input type="Number"
+											placeholder="Intensidad Alcanzada" v-model="ejercicio.intensidad">
 										<br>
-										<p class="lista_ejercicio_elemento">Tiempo:</p><input type="Number" placeholder="Tiempo de Ejecución" v-model="ejercicio.tiempo">										
-										<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+										<p class="lista_ejercicio_elemento">Tiempo:</p><input type="Number"
+											placeholder="Tiempo de Ejecución" v-model="ejercicio.tiempo">
+										<hr
+											style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 										<br>
 									</div>
-									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<hr
+										style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 								</li>
 							</ul>
 							<br>
@@ -310,7 +331,7 @@
 				</div>
 
 
-<!-- VISUALIZAR PLANES -->
+				<!-- VISUALIZAR PLANES -->
 
 
 				<div id="visualizarPlanes-page" class="mui-page">
@@ -322,11 +343,13 @@
 					<div class="mui-page-body" id="second-body" style="overflow:scroll">
 						<div>
 							<div id="visualizarPlanes-app">
-							<p class="titulo">PLANES</p>
-							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
-							<br>
+								<p class="titulo">PLANES</p>
+								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+								<br>
 								<div class="col-80">
-									<input type="text" class="filtro_planes_input" onkeyup="filtro('.filtro_planes_input', '.lista_planes')" placeholder="Buscar plan">
+									<input type="text" class="filtro_planes_input"
+										onkeyup="filtro('.filtro_planes_input', '.lista_planes')"
+										placeholder="Buscar plan">
 									<br>
 									<ul class="lista_planes_visualizar"><br>
 										<li v-for='plan in planes'>
@@ -340,7 +363,7 @@
 				</div>
 
 
-<!-- VISUALIZAR PLANES - VISUALIZAR EJERCICIOS -->
+				<!-- VISUALIZAR PLANES - VISUALIZAR EJERCICIOS -->
 
 
 				<div id='visualizarEjercicios-page' class="mui-page">
@@ -356,7 +379,8 @@
 							<li v-for="(ejercicio, index) in ejercicios">
 								<div class="col-80">
 									<p class="nombre_ejercicio">{{ejercicio.nombre}}</p>
-									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<hr
+										style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 									<p class="lista_ejercicio_elemento">Series: {{ejercicio.series}}</p>
 									<br>
 									<p class="lista_ejercicio_elemento">repeticiones: {{ejercicio.repeticiones}}</p>
@@ -364,7 +388,8 @@
 									<p class="lista_ejercicio_elemento">Intensidad: {{ejercicio.intensidad}}</p>
 									<br>
 									<p class="lista_ejercicio_elemento">Tiempo: {{ejercicio.tiempo}}</p>
-									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<hr
+										style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 									<button class="ver_sesiones_boton" @click="verSesiones(index)">Ver Sesiones</button>
 								</div>
 								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
@@ -375,7 +400,7 @@
 				</div>
 
 
-<!-- VISUALIZAR PLANES - VISUALIZAR EJERCICIOS - VISUALIZAR SESIONES -->
+				<!-- VISUALIZAR PLANES - VISUALIZAR EJERCICIOS - VISUALIZAR SESIONES -->
 
 
 				<div id='visualizarSesiones-page' class="mui-page">
@@ -391,7 +416,8 @@
 							<li v-for="(sesion, i) in sesiones">
 								<div class="col-80">
 									<p class="nombre_ejercicio">Sesión - {{i + 1}}</p>
-									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<hr
+										style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 									<p class="lista_ejercicio_elemento">Series: {{sesion.series}}</p>
 									<br>
 									<p class="lista_ejercicio_elemento">repeticiones: {{sesion.repeticiones}}</p>
@@ -399,7 +425,8 @@
 									<p class="lista_ejercicio_elemento">Intensidad: {{sesion.intensidad}}</p>
 									<br>
 									<p class="lista_ejercicio_elemento">Tiempo: {{sesion.tiempo}}</p>
-									<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
+									<hr
+										style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 									<br>
 								</div>
 								<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
@@ -410,7 +437,7 @@
 				</div>
 
 
-<!-- ASIGNAR PLAN -->
+				<!-- ASIGNAR PLAN -->
 
 
 				<div id="asignarPlan-page" class="mui-page">
@@ -427,11 +454,13 @@
 									<option disabled value="">Seleccione un plan</option>
 									<option v-for="plan in planes" v-bind:value="plan._id">{{plan.nombre}}</option>
 								</select>
-								<button class="confirmar_selector_boton" @click="asignarPlanSeleccionado">Agregar/cambiar plan asignado</button>
+								<button class="confirmar_selector_boton"
+									@click="asignarPlanSeleccionado">Agregar/cambiar plan asignado</button>
 							</div>
 							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 							<div class="col-80">
-								<div class="plan_asignado_contenedor"><span class="plan_asignado_label">Plan asignado:</span> {{plan_actual.nombre}}</div>
+								<div class="plan_asignado_contenedor"><span class="plan_asignado_label">Plan
+										asignado:</span> {{plan_actual.nombre}}</div>
 							</div>
 							<hr style="width:95%; height:3px; border-width:0; color:gray; background-color:gray">
 						</div>
@@ -439,11 +468,11 @@
 				</div>
 
 
-<!-- Copy the code of "template-page" to add more pages -->
-<!-- Copie el código de template-plage para agregar más páginas -->
+				<!-- Copy the code of "template-page" to add more pages -->
+				<!-- Copie el código de template-plage para agregar más páginas -->
 
-<!-- Optional.Toolbar out of mui-viewport to be omnipresent. Remove if not needed. -->
-<!-- Opcional. Barra de herramientas fuera de mui-viewport para ser omnipresente. Elimínalo si no lo necesitas. -->
+				<!-- Optional.Toolbar out of mui-viewport to be omnipresent. Remove if not needed. -->
+				<!-- Opcional. Barra de herramientas fuera de mui-viewport para ser omnipresente. Elimínalo si no lo necesitas. -->
 
 
 				<div class="mui-tabbar" id="footer">
@@ -455,8 +484,8 @@
 				</div>
 			</div>
 
-<!-- mui-screen level panel -->
-<!-- Panel a nivel de mui-screen -->
+			<!-- mui-screen level panel -->
+			<!-- Panel a nivel de mui-screen -->
 
 		</div>
 		<div id="menu-panel" class="mui-panel">
