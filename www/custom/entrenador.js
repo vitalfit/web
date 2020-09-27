@@ -12,6 +12,12 @@ $(document).ready(() => {
 		success: function (data) {
 			homePage.alumnos = data
 			mui.busy(false)
+		},
+		error: function(error){
+			if (error.status == 401){
+				console.log(error)
+				document.location.href = "index.html"
+			}
 		}
 	})
 	const homePage = new Vue({

@@ -28,6 +28,12 @@ $(document).ready(() => {
 				}
 			})
 
+		},
+		error: function(error){
+			if (error.status == 401){
+				console.log(error)
+				document.location.href = "index.html"
+			}
 		}
 	})
 
