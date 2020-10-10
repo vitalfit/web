@@ -72,19 +72,25 @@
 									<br>
 									<v-row class="fill-height" align="center" justify="center">
 										<div class="col-80">
-											{{ejercicio.nombre}}
+											<span> EJERCICIO:</span> <br><br>{{ejercicio.nombre}}
+											<v-divider dark=true style="margin-top: 5%"></v-divider>
 										</div>
 										<div class="col-80">
-											{{ejercicio.series}}
+											SERIES: <br><br>{{ejercicio.series}}
+											<v-divider dark=true style="margin-top: 5%"></v-divider>
+										</div>
+										
+										<div class="col-80">
+											REPETICIONES: <br><br>{{ejercicio.repeticiones}}
+											<v-divider dark=true style="margin-top: 5%"></v-divider>
 										</div>
 										<div class="col-80">
-											{{ejercicio.repeticiones}}
+											INTENSIDAD: <br><br>{{ejercicio.intensidad}}
+											<v-divider dark=true style="margin-top: 5%"></v-divider>
 										</div>
 										<div class="col-80">
-											{{ejercicio.intensidad}}
-										</div>
-										<div class="col-80">
-											{{ejercicio.tiempo}}
+											TIEMPO: <br><br>{{ejercicio.tiempo}}
+											<v-divider dark=true style="margin-top: 5%"></v-divider>
 										</div>
 										<div class="col-80">
 											<v-btn @click="handleSelectEjercicio(ejercicio)"> CARGAR SESION</v-btn>
