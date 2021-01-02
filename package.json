@@ -1,5 +1,5 @@
 {
-  "name": "vitalfit",
+  "name": "VitalFit",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fedeabdo/vitalfit.git"
+    "url": "git+https://github.com/vitalfit/web.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fedeabdo/vitalfit/issues"
+    "url": "https://github.com/vitalfit/web/issues"
   },
-  "homepage": "https://github.com/fedeabdo/vitalfit#readme",
+  "homepage": "https://github.com/vitalfit/web#readme",
   "dependencies": {
     "@stevegill/cordova-plugin-device": "^1.1.3",
     "all": "0.0.0",
