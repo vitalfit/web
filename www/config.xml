@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget id="your.app.id" versionCode="1" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">    
+<widget id="your.app.id" versionCode="1" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">    
 	  
-    <name>MobileUI</name>
+    <name>VITALFIT</name>
     
     <description>
-        MobileUI
+        VITALFIT
     </description>
 
-    <author href="http://www.mobileui.org" email="gustavo.gretter@mobileui.org">
-        Gustavo Gretter
+    <author>
+        Federico Abdo
     </author>
   
 	<!-- Customize your app and platform with the preference element. -->
