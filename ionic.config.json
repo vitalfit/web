@@ -1,0 +1,7 @@
+{
+  "name": "vitalfit",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "custom"
+}

@@ -67,7 +67,7 @@
 						<!-- <v-container  fill-height> -->
 						<v-carousel style="height: 100%;" :light='true' :next-icon='false' :prev-icon='false'
 							:continuous="false">
-							<v-carousel-item v-for="(ejercicio, i) in diaSeleccionado.ejercicios" :key="i">
+							<v-carousel-item v-for="(ejercicio, i) in diaSeleccionado.ejercicios" :key="i" style="overflow-y: scroll; padding-bottom: 50px;">
 								<v-sheet height="100%" background='black'>
 									<br>
 									<v-row class="fill-height" align="center" justify="center">
