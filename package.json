@@ -37,7 +37,7 @@
     "nodemon": "^2.0.4",
     "uuid": "^8.2.0",
     "vue": "^2.6.11",
-    "vuetify": "^2.3.4",
+    "vuetify": "^2.6.10",
     "zingchart": "^2.9.0"
   },
   "cordova": {
